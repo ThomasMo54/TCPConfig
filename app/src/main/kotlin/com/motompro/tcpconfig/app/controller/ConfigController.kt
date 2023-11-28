@@ -1,5 +1,6 @@
 package com.motompro.tcpconfig.app.controller
 
+import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.text.Text
@@ -22,22 +23,22 @@ class ConfigController {
     private lateinit var removeButton: Button
 
     @FXML
-    private fun onUseButtonClick() {
+    private fun onUseButtonClick(event: ActionEvent) {
 
     }
 
     @FXML
-    private fun onEditButtonClick() {
+    private fun onEditButtonClick(event: ActionEvent) {
 
     }
 
     @FXML
-    private fun onExportButtonClick() {
+    private fun onExportButtonClick(event: ActionEvent) {
 
     }
 
     @FXML
-    private fun onRemoveButtonClick() {
+    private fun onRemoveButtonClick(event: ActionEvent) {
 
     }
 }
