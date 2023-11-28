@@ -1,11 +1,14 @@
 package com.motompro.tcpconfig.app.controller
 
+import com.motompro.tcpconfig.app.config.Config
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.text.Text
 
 class ConfigController {
+
+    lateinit var config: Config
 
     @FXML
     private lateinit var configNameText: Text

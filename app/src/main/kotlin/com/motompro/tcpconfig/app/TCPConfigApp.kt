@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.stage.Stage
+import java.io.InputStream
 
 private const val DEFAULT_WIDTH = 720.0
 private const val DEFAULT_HEIGHT = 480.0
@@ -38,6 +39,10 @@ class TCPConfigApp : Application() {
         const val VERSION = "2.0"
         lateinit var INSTANCE: TCPConfigApp
             private set
+
+        fun getResourceStream(path: String): InputStream? {
+            return TCPConfigApp::class.java.getResourceAsStream(path)
+        }
     }
 }
 
