@@ -28,7 +28,7 @@ class ConfigManager {
     val configs: Map<String, Config>
         get() = _configs
 
-    private val configsDirectory = File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path + "configs")
+    private val configsDirectory = File(File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path).parentFile, "configs")
     private val yamlLoader: Yaml
 
     init {

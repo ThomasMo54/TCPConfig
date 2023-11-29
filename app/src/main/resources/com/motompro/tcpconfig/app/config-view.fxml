@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -10,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="200.0" prefHeight="100.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.motompro.tcpconfig.app.controller.ConfigController">
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="200.0" onMouseEntered="#onMouseEnterPane" onMouseExited="#onMouseExitPane" prefHeight="80.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.motompro.tcpconfig.app.controller.ConfigController">
    <left>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -19,15 +20,15 @@
                   <Font name="System Bold" size="14.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="10.0" />
+                  <Insets bottom="5.0" />
                </VBox.margin>
             </Text>
-            <Text fx:id="configAdapterText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+            <Text fx:id="configAdapterText" fill="#888888" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
                <VBox.margin>
                   <Insets bottom="5.0" />
                </VBox.margin>
             </Text>
-            <Text fx:id="configPropertiesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <Text fx:id="configPropertiesText" fill="#888888" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
          </children>
       </VBox>
    </left>
@@ -37,9 +38,9 @@
    <right>
       <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="useButton" mnemonicParsing="false" onAction="#onUseButtonClick" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent; -fx-text-fill: transparent;">
+            <Button fx:id="useButton" mnemonicParsing="false" onAction="#onUseButtonClick" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;" visible="false">
                <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image/use-icon.png" />
                      </image>
@@ -48,10 +49,13 @@
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
+               <tooltip>
+                  <Tooltip text="Utiliser" />
+               </tooltip>
             </Button>
-            <Button fx:id="editButton" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent; -fx-text-fill: transparent;">
+            <Button fx:id="editButton" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;" visible="false">
                <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image/edit-icon.png" />
                      </image>
@@ -60,10 +64,13 @@
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
+               <tooltip>
+                  <Tooltip text="Modifier" />
+               </tooltip>
             </Button>
-            <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent; -fx-text-fill: transparent;">
+            <Button fx:id="exportButton" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;" visible="false">
                <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image/export-icon.png" />
                      </image>
@@ -72,10 +79,13 @@
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
+               <tooltip>
+                  <Tooltip text="Exporter" />
+               </tooltip>
             </Button>
-            <Button fx:id="removeButton" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent; -fx-text-fill: transparent;">
+            <Button fx:id="removeButton" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefHeight="20.0" prefWidth="20.0" style="-fx-background-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;" visible="false">
                <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@image/remove-icon.png" />
                      </image>
@@ -84,6 +94,9 @@
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
+               <tooltip>
+                  <Tooltip text="Supprimer" />
+               </tooltip>
             </Button>
          </children>
       </HBox>

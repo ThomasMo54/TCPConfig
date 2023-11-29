@@ -39,10 +39,6 @@ class TCPConfigApp : Application() {
         const val VERSION = "2.0"
         lateinit var INSTANCE: TCPConfigApp
             private set
-
-        fun getResourceStream(path: String): InputStream? {
-            return TCPConfigApp::class.java.getResourceAsStream(path)
-        }
     }
 }
 
