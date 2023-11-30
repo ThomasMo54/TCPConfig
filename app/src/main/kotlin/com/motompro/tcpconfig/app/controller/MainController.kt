@@ -17,8 +17,8 @@ import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 
-private val EVEN_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.9, 0.9, 0.9), CornerRadii.EMPTY, Insets.EMPTY))
-private val ODD_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.8, 0.8, 0.8), CornerRadii.EMPTY, Insets.EMPTY))
+private val EVEN_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.93, 0.93, 0.93), CornerRadii.EMPTY, Insets.EMPTY))
+private val ODD_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.9, 0.9, 0.9), CornerRadii.EMPTY, Insets.EMPTY))
 
 class MainController {
 
@@ -38,7 +38,7 @@ class MainController {
         configs.forEach {
             val node = createConfigNode(it)
             node.background = if (even) EVEN_CONFIG_NODE_COLOR else ODD_CONFIG_NODE_COLOR
-            configsList.children.add(createConfigNode(it))
+            configsList.children.add(node)
             even = !even
         }
     }

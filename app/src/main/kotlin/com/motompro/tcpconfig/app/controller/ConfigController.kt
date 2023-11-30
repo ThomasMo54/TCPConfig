@@ -1,11 +1,18 @@
 package com.motompro.tcpconfig.app.controller
 
 import com.motompro.tcpconfig.app.config.Config
+import javafx.animation.Interpolator
+import javafx.animation.KeyFrame
+import javafx.animation.KeyValue
+import javafx.animation.Timeline
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
+import javafx.scene.effect.ColorAdjust
 import javafx.scene.input.MouseEvent
 import javafx.scene.text.Text
+import javafx.util.Duration
+
 
 class ConfigController {
 
@@ -39,6 +46,44 @@ class ConfigController {
     @FXML
     private fun initialize() {
         buttons = setOf(useButton, editButton, exportButton, removeButton)
+        // Set buttons hover animation
+        buttons.forEach { button ->
+            val colorAdjust = ColorAdjust()
+            colorAdjust.brightness = 0.0
+            button.effect = colorAdjust
+            button.setOnMouseEntered {
+                val fadeInTimeline = Timeline(
+                    KeyFrame(
+                        Duration.seconds(0.0),
+                        KeyValue(
+                            colorAdjust.brightnessProperty(),
+                            colorAdjust.brightnessProperty().value,
+                            Interpolator.LINEAR,
+                        ),
+                    ),
+                    KeyFrame(Duration.seconds(0.2), KeyValue(colorAdjust.brightnessProperty(), -0.2, Interpolator.LINEAR))
+                )
+                fadeInTimeline.cycleCount = 1
+                fadeInTimeline.isAutoReverse = false
+                fadeInTimeline.play()
+            }
+            button.setOnMouseExited {
+                val fadeOutTimeline = Timeline(
+                    KeyFrame(
+                        Duration.seconds(0.0),
+                        KeyValue(
+                            colorAdjust.brightnessProperty(),
+                            colorAdjust.brightnessProperty().value,
+                            Interpolator.LINEAR,
+                        ),
+                    ),
+                    KeyFrame(Duration.seconds(0.2), KeyValue(colorAdjust.brightnessProperty(), 0, Interpolator.LINEAR))
+                )
+                fadeOutTimeline.cycleCount = 1
+                fadeOutTimeline.isAutoReverse = false
+                fadeOutTimeline.play()
+            }
+        }
     }
 
     @FXML
