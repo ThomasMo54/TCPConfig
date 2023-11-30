@@ -1,5 +1,6 @@
 package com.motompro.tcpconfig.app.controller
 
+import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
@@ -7,7 +8,9 @@ import javafx.animation.KeyValue
 import javafx.animation.Timeline
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
 import javafx.scene.effect.ColorAdjust
 import javafx.scene.input.MouseEvent
 import javafx.scene.text.Text
@@ -26,6 +29,7 @@ class ConfigController {
             if (value.defaultGateway != null) properties.add(value.defaultGateway!!)
             configPropertiesText.text = properties.joinToString("  |  ")
         }
+    lateinit var mainController: MainController
     private lateinit var buttons: Set<Button>
 
     @FXML
@@ -113,6 +117,11 @@ class ConfigController {
 
     @FXML
     private fun onRemoveButtonClick(event: ActionEvent) {
-
+        val confirmAlert = Alert(Alert.AlertType.WARNING, "Voulez-vous vraiment supprimer la config \"${config?.name}\" ?", ButtonType.YES, ButtonType.NO)
+        confirmAlert.title = "Attention"
+        if (confirmAlert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) {
+            config?.let { TCPConfigApp.INSTANCE.configManager.removeConfig(it) }
+            mainController.updateConfigList()
+        }
     }
 }

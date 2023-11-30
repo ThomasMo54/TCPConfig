@@ -110,6 +110,16 @@ class ConfigManager {
         fileWriter.close()
     }
 
+    /**
+     * Remove a config from the list and from the config files
+     * @param config the config to remove
+     */
+    fun removeConfig(config: Config) {
+        _configs.remove(config.name)
+        val configFile = File(configsDirectory, config.name + ".yml")
+        configFile.delete()
+    }
+
     companion object {
         /**
          * Used to convert properties name that contain dashes to camel case

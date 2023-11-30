@@ -33,14 +33,7 @@ class MainController {
 
     @FXML
     private fun initialize() {
-        val configs = TCPConfigApp.INSTANCE.configManager.configs.values.sortedBy { it.name }
-        var even = true
-        configs.forEach {
-            val node = createConfigNode(it)
-            node.background = if (even) EVEN_CONFIG_NODE_COLOR else ODD_CONFIG_NODE_COLOR
-            configsList.children.add(node)
-            even = !even
-        }
+        updateConfigList()
     }
 
     @FXML
@@ -58,6 +51,18 @@ class MainController {
 
     }
 
+    fun updateConfigList() {
+        configsList.children.clear()
+        val configs = TCPConfigApp.INSTANCE.configManager.configs.values.sortedBy { it.name }
+        var even = true
+        configs.forEach {
+            val node = createConfigNode(it)
+            node.background = if (even) EVEN_CONFIG_NODE_COLOR else ODD_CONFIG_NODE_COLOR
+            configsList.children.add(node)
+            even = !even
+        }
+    }
+
     /**
      * Create a config node based on the config data
      * @param config the config data
@@ -68,6 +73,7 @@ class MainController {
         val node = fxmlLoader.load<BorderPane>()
         val controller = fxmlLoader.getController<ConfigController>()
         controller.config = config
+        controller.mainController = this
         return node
     }
 }
