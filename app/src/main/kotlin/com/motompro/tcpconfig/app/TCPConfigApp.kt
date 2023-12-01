@@ -23,7 +23,6 @@ class TCPConfigApp : Application() {
         this.stage = stage
 
         configManager.loadConfigs()
-        netInterfaceManager.netInterfaces.forEach { println(it) }
 
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("main-view.fxml"))
         val scene = Scene(fxmlLoader.load(), DEFAULT_WIDTH, DEFAULT_HEIGHT)
