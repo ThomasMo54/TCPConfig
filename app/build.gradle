@@ -58,6 +58,7 @@ launch4j {
   mainClassName = 'com.motompro.tcpconfig.app.TCPConfigAppKt'
   productName = 'TCPConfig'
   icon = "${projectDir}/icon/app-icon.ico"
+  manifest = "${projectDir}/TCPConfig.manifest"
   jarTask = project.tasks.jar
 }
 
