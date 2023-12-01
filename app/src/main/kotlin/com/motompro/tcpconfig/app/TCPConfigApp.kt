@@ -8,7 +8,6 @@ import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.stage.Stage
-import java.io.InputStream
 
 private const val DEFAULT_WIDTH = 720.0
 private const val DEFAULT_HEIGHT = 480.0
@@ -58,7 +57,7 @@ class TCPConfigApp : Application() {
         stage.scene = scene
     }
 
-    fun <T> swapScene(sceneView: String, controllerClass: Class<T>): T {
+    fun <T> swapScene(sceneView: String): T {
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource(sceneView))
         val parent = fxmlLoader.load<Parent>()
         val scene = Scene(parent, stage.scene.width, stage.scene.height)

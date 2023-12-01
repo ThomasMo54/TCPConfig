@@ -68,7 +68,7 @@ class AddEditConfigController {
                 )
                 TCPConfigApp.INSTANCE.configManager.addConfig(config)
             }
-            val controller = TCPConfigApp.INSTANCE.swapScene("main-view.fxml", MainController::class.java)
+            val controller = TCPConfigApp.INSTANCE.swapScene<MainController>("main-view.fxml")
             controller.updateConfigList()
         } catch (ex: InvalidConfigFieldException) {
             when (ex.type) {
