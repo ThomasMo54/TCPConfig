@@ -3,6 +3,7 @@ package com.motompro.tcpconfig.app
 import com.motompro.tcpconfig.app.config.ConfigManager
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
+import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.stage.Stage
@@ -26,7 +27,7 @@ class TCPConfigApp : Application() {
 
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("main-view.fxml"))
         val scene = Scene(fxmlLoader.load(), DEFAULT_WIDTH, DEFAULT_HEIGHT)
-        stage.title = "TCPConfig $VERSION"
+        stage.title = WINDOW_TITLE
         stage.scene = scene
         stage.show()
     }
@@ -40,8 +41,23 @@ class TCPConfigApp : Application() {
         errorAlert.showAndWait()
     }
 
+    fun swapScene(sceneView: String) {
+        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource(sceneView))
+        val scene = Scene(fxmlLoader.load(), stage.scene.width, stage.scene.height)
+        stage.scene = scene
+    }
+
+    fun <T> swapScene(sceneView: String, controllerClass: Class<T>): T {
+        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource(sceneView))
+        val parent = fxmlLoader.load<Parent>()
+        val scene = Scene(parent, stage.scene.width, stage.scene.height)
+        stage.scene = scene
+        return fxmlLoader.getController()
+    }
+
     companion object {
         const val VERSION = "2.0"
+        const val WINDOW_TITLE = "TCPConfig $VERSION"
         lateinit var INSTANCE: TCPConfigApp
             private set
     }

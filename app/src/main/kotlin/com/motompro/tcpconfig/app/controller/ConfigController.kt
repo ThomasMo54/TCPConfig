@@ -8,11 +8,14 @@ import javafx.animation.KeyValue
 import javafx.animation.Timeline
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
+import javafx.fxml.FXMLLoader
+import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonType
 import javafx.scene.effect.ColorAdjust
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.BorderPane
 import javafx.scene.text.Text
 import javafx.stage.FileChooser
 import javafx.util.Duration
@@ -52,43 +55,7 @@ class ConfigController {
     private fun initialize() {
         buttons = setOf(useButton, editButton, exportButton, removeButton)
         // Set buttons hover animation
-        buttons.forEach { button ->
-            val colorAdjust = ColorAdjust()
-            colorAdjust.brightness = 0.0
-            button.effect = colorAdjust
-            button.setOnMouseEntered {
-                val fadeInTimeline = Timeline(
-                    KeyFrame(
-                        Duration.seconds(0.0),
-                        KeyValue(
-                            colorAdjust.brightnessProperty(),
-                            colorAdjust.brightnessProperty().value,
-                            Interpolator.LINEAR,
-                        ),
-                    ),
-                    KeyFrame(Duration.seconds(0.2), KeyValue(colorAdjust.brightnessProperty(), -0.2, Interpolator.LINEAR))
-                )
-                fadeInTimeline.cycleCount = 1
-                fadeInTimeline.isAutoReverse = false
-                fadeInTimeline.play()
-            }
-            button.setOnMouseExited {
-                val fadeOutTimeline = Timeline(
-                    KeyFrame(
-                        Duration.seconds(0.0),
-                        KeyValue(
-                            colorAdjust.brightnessProperty(),
-                            colorAdjust.brightnessProperty().value,
-                            Interpolator.LINEAR,
-                        ),
-                    ),
-                    KeyFrame(Duration.seconds(0.2), KeyValue(colorAdjust.brightnessProperty(), 0, Interpolator.LINEAR))
-                )
-                fadeOutTimeline.cycleCount = 1
-                fadeOutTimeline.isAutoReverse = false
-                fadeOutTimeline.play()
-            }
-        }
+        buttons.forEach { button -> MainController.addDarkenEffect(button) }
     }
 
     @FXML
@@ -108,7 +75,13 @@ class ConfigController {
 
     @FXML
     private fun onEditButtonClick(event: ActionEvent) {
-
+        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("add-edit-config-view.fxml"))
+        val node = fxmlLoader.load<BorderPane>()
+        val controller = fxmlLoader.getController<AddEditConfigController>()
+        controller.configInEdition = config
+        val stage = TCPConfigApp.INSTANCE.stage
+        val scene = Scene(node, stage.scene.width, stage.scene.height)
+        stage.scene = scene
     }
 
     @FXML

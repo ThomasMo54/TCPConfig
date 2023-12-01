@@ -24,9 +24,9 @@ private const val LEGACY_CONFIG_FILE_EXTENSION = "tcpc"
  */
 class ConfigManager {
 
-    private val _configs = mutableMapOf<String, Config>()
+    private val _configs = mutableMapOf<String, Pair<Config, File>>()
     val configs: Map<String, Config>
-        get() = _configs
+        get() = _configs.mapValues { it.value.first }
 
     private val configsDirectory = File(File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path).parentFile, "configs")
     private val yamlLoader: Yaml
@@ -78,7 +78,7 @@ class ConfigManager {
                 if (lines.size >= 6) lines[5] else null,
                 if (lines.size >= 7) lines[6] else null,
             )
-            _configs[config.name] = config
+            _configs[config.name] = config to File(configsDirectory, config.name + ".yml")
             try {
                 saveConfig(config)
                 configFile.delete()
@@ -93,7 +93,7 @@ class ConfigManager {
         }
         val inputStream = FileInputStream(configFile)
         val config = yamlLoader.loadAs(inputStream, Config::class.java)
-        _configs[config.name] = config
+        _configs[config.name] = config to configFile
         inputStream.close()
         return config
     }
@@ -103,7 +103,7 @@ class ConfigManager {
      * @param config the config's data
      * @param destination *optional* - the destination file
      */
-    fun saveConfig(config: Config, destination: File = File(configsDirectory, config.name + ".yml")) {
+    fun saveConfig(config: Config, destination: File = File(configsDirectory, "${config.name}.yml")) {
         destination.createNewFile()
         val fileWriter = FileWriter(destination)
         yamlLoader.dump(config, fileWriter)
@@ -111,13 +111,35 @@ class ConfigManager {
     }
 
     /**
+     * Add a config to the map and to the files and rename it if another config with the same name already exists
+     * @param config the config to add
+     */
+    fun addConfig(config: Config) {
+        val finalName = findNotUsedName(config.name)
+        config.name = finalName
+        val configFile = File(configsDirectory, "$finalName.yml")
+        saveConfig(config, configFile)
+        _configs[finalName] = config to configFile
+    }
+
+    private fun findNotUsedName(wantedName: String): String {
+        if (!_configs.containsKey(wantedName)) return wantedName
+        var i = 2
+        var name: String
+        do {
+            name = "$wantedName ($i)"
+            i++
+        } while (_configs.containsKey(name))
+        return name
+    }
+
+    /**
      * Remove a config from the list and from the config files
      * @param config the config to remove
      */
     fun removeConfig(config: Config) {
+        _configs[config.name]?.second?.delete()
         _configs.remove(config.name)
-        val configFile = File(configsDirectory, config.name + ".yml")
-        configFile.delete()
     }
 
     companion object {
