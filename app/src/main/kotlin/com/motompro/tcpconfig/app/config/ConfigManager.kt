@@ -16,9 +16,6 @@ import java.io.IOException
 import java.util.Locale
 
 
-private const val CONFIG_FILE_EXTENSION = "yml"
-private const val LEGACY_CONFIG_FILE_EXTENSION = "tcpc"
-
 /**
  * This class manages configs operations such as loading or deleting
  */
@@ -69,8 +66,9 @@ class ConfigManager {
                 TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier mal formatté (${configFile.name})")
                 throw IllegalArgumentException()
             }
+            val name = findNotUsedName(lines[0])
             val config = Config(
-                lines[0],
+                name,
                 lines[1],
                 lines[2],
                 lines[3],
@@ -78,9 +76,10 @@ class ConfigManager {
                 if (lines.size >= 6) lines[5] else null,
                 if (lines.size >= 7) lines[6] else null,
             )
-            _configs[config.name] = config to File(configsDirectory, config.name + ".yml")
+            val destinationFile = File(configsDirectory, "$name.yml")
+            _configs[name] = config to destinationFile
             try {
-                saveConfig(config)
+                saveConfig(config, destinationFile)
                 configFile.delete()
             } catch (ex: IOException) {
                 TCPConfigApp.INSTANCE.showErrorAlert("Erreur", ex.stackTraceToString())
@@ -93,7 +92,9 @@ class ConfigManager {
         }
         val inputStream = FileInputStream(configFile)
         val config = yamlLoader.loadAs(inputStream, Config::class.java)
-        _configs[config.name] = config to configFile
+        val name = findNotUsedName(config.name)
+        config.name = name
+        _configs[name] = config to configFile
         inputStream.close()
         return config
     }
@@ -148,6 +149,9 @@ class ConfigManager {
     }
 
     companion object {
+        const val CONFIG_FILE_EXTENSION = "yml"
+        const val LEGACY_CONFIG_FILE_EXTENSION = "tcpc"
+
         /**
          * Used to convert properties name that contain dashes to camel case
          */

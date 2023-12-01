@@ -2,6 +2,7 @@ package com.motompro.tcpconfig.app.controller
 
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
+import com.motompro.tcpconfig.app.config.ConfigManager
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
@@ -10,7 +11,6 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
-import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import javafx.scene.effect.ColorAdjust
@@ -20,11 +20,12 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
+import javafx.stage.FileChooser
 import javafx.util.Duration
 import java.awt.Desktop
 import java.net.URL
 
-private val EVEN_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.93, 0.93, 0.93), CornerRadii.EMPTY, Insets.EMPTY))
+private val EVEN_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.95, 0.95, 0.95), CornerRadii.EMPTY, Insets.EMPTY))
 private val ODD_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.9, 0.9, 0.9), CornerRadii.EMPTY, Insets.EMPTY))
 private const val MOTOMPRO_WEBSITE = "http://motompro.com"
 
@@ -49,6 +50,27 @@ class MainController {
     @FXML
     private fun onAddConfigButtonClick(event: ActionEvent) {
         TCPConfigApp.INSTANCE.swapScene("add-edit-config-view.fxml")
+    }
+
+    @FXML
+    private fun onImportConfigButtonClick(event: ActionEvent) {
+        val fileChooser = FileChooser()
+        fileChooser.extensionFilters.add(
+            FileChooser.ExtensionFilter(
+                "Fichiers YAML (*.${ConfigManager.CONFIG_FILE_EXTENSION}), Fichiers TCPC (*.${ConfigManager.LEGACY_CONFIG_FILE_EXTENSION})",
+                "*.${ConfigManager.CONFIG_FILE_EXTENSION}",
+                "*.${ConfigManager.LEGACY_CONFIG_FILE_EXTENSION}",
+            ),
+        )
+        val file = fileChooser.showOpenDialog(TCPConfigApp.INSTANCE.stage) ?: return
+        try {
+            val config = TCPConfigApp.INSTANCE.configManager.loadConfig(file)
+            if (file.extension != ConfigManager.LEGACY_CONFIG_FILE_EXTENSION) {
+                TCPConfigApp.INSTANCE.configManager.saveConfig(config)
+            }
+            updateConfigList()
+            TCPConfigApp.INSTANCE.showInfoAlert("Succès", "La config \"${config.name}\" a bien été importée")
+        } catch (_: IllegalArgumentException) {}
     }
 
     @FXML

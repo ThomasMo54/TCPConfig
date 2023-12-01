@@ -59,6 +59,15 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#onImportConfigButtonClick" prefHeight="80.0" prefWidth="120.0" text="Importer">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@image/import-icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </VBox>
          </center>

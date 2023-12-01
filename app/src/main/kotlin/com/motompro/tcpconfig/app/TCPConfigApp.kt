@@ -41,6 +41,15 @@ class TCPConfigApp : Application() {
         errorAlert.showAndWait()
     }
 
+    fun showInfoAlert(title: String, message: String) {
+        val infoAlert = Alert(Alert.AlertType.INFORMATION)
+        infoAlert.title = title
+        infoAlert.headerText = title
+        infoAlert.contentText = message
+        infoAlert.dialogPane.minWidth = 500.0
+        infoAlert.showAndWait()
+    }
+
     fun swapScene(sceneView: String) {
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource(sceneView))
         val scene = Scene(fxmlLoader.load(), stage.scene.width, stage.scene.height)

@@ -2,6 +2,7 @@ package com.motompro.tcpconfig.app.controller
 
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
+import com.motompro.tcpconfig.app.config.ConfigManager
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
@@ -87,7 +88,7 @@ class ConfigController {
     @FXML
     private fun onExportButtonClick(event: ActionEvent) {
         val fileChooser = FileChooser()
-        fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("Fichiers YAML (*.yml)", "*.yml"))
+        fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("Fichiers YAML (*.${ConfigManager.CONFIG_FILE_EXTENSION})", "*.${ConfigManager.CONFIG_FILE_EXTENSION}"))
         val file = fileChooser.showSaveDialog(TCPConfigApp.INSTANCE.stage) ?: return
         TCPConfigApp.INSTANCE.configManager.saveConfig(config!!, file)
         val successAlert = Alert(Alert.AlertType.INFORMATION, "La configuration a bien été exportée dans le fichier ${file.name}")
