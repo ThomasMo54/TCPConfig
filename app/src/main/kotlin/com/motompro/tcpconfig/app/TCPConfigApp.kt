@@ -36,6 +36,7 @@ class TCPConfigApp : Application() {
         errorAlert.title = title
         errorAlert.headerText = title
         errorAlert.contentText = message
+        errorAlert.dialogPane.minWidth = 500.0
         errorAlert.showAndWait()
     }
 
