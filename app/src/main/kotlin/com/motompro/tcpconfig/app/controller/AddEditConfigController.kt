@@ -47,13 +47,15 @@ class AddEditConfigController {
         try {
             validateFields()
             if (configInEdition != null) {
+                TCPConfigApp.INSTANCE.configManager.removeConfig(configInEdition!!)
                 configInEdition!!.name = nameTextField.text
                 configInEdition!!.networkAdapter = netInterfaceComboBox.value
                 configInEdition!!.ip = ipTextField.text
                 configInEdition!!.subnetMask = maskTextField.text
-                configInEdition!!.defaultGateway = gatewayTextField.text
-                configInEdition!!.preferredDNS = favDNSTextField.text
-                configInEdition!!.auxDNS = auxDNSTextField.text
+                configInEdition!!.defaultGateway = gatewayTextField.text.ifBlank { null }
+                configInEdition!!.preferredDNS = favDNSTextField.text.ifBlank { null }
+                configInEdition!!.auxDNS = auxDNSTextField.text.ifBlank { null }
+                TCPConfigApp.INSTANCE.configManager.addConfig(configInEdition!!)
             } else {
                 val config = Config(
                     nameTextField.text,

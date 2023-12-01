@@ -122,6 +122,11 @@ class ConfigManager {
         _configs[finalName] = config to configFile
     }
 
+    /**
+     * Add a (i) after the given name if it already exists
+     * @param wantedName the original name
+     * @return the original name with an appending if needed
+     */
     private fun findNotUsedName(wantedName: String): String {
         if (!_configs.containsKey(wantedName)) return wantedName
         var i = 2
