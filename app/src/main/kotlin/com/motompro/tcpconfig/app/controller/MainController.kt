@@ -16,9 +16,12 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
+import java.awt.Desktop
+import java.net.URL
 
 private val EVEN_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.93, 0.93, 0.93), CornerRadii.EMPTY, Insets.EMPTY))
 private val ODD_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.9, 0.9, 0.9), CornerRadii.EMPTY, Insets.EMPTY))
+private const val MOTOMPRO_WEBSITE = "http://motompro.com"
 
 class MainController {
 
@@ -48,7 +51,7 @@ class MainController {
 
     @FXML
     private fun onWebsiteHyperlinkClick(event: ActionEvent) {
-
+        Desktop.getDesktop().browse(URL(MOTOMPRO_WEBSITE).toURI());
     }
 
     fun updateConfigList() {
