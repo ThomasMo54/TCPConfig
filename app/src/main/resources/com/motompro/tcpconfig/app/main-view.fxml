@@ -33,7 +33,7 @@
                   <Insets left="10.0" />
                </padding>
                <center>
-                  <TextField fx:id="searchTextField" onInputMethodTextChanged="#onSearchTextChange" promptText="Rechercher" BorderPane.alignment="CENTER">
+                  <TextField fx:id="searchTextField" promptText="Rechercher" BorderPane.alignment="CENTER">
                      <BorderPane.margin>
                         <Insets left="10.0" />
                      </BorderPane.margin>

@@ -25,6 +25,8 @@ private const val MOTOMPRO_WEBSITE = "http://motompro.com"
 
 class MainController {
 
+    private var currentSearch = ""
+
     @FXML
     private lateinit var searchTextField: TextField
     @FXML
@@ -37,11 +39,10 @@ class MainController {
     @FXML
     private fun initialize() {
         updateConfigList()
-    }
-
-    @FXML
-    private fun onSearchTextChange(event: InputMethodEvent) {
-
+        searchTextField.textProperty().addListener { observable, oldValue, newValue ->
+            currentSearch = newValue
+            updateConfigList()
+        }
     }
 
     @FXML
@@ -58,7 +59,7 @@ class MainController {
         configsList.children.clear()
         val configs = TCPConfigApp.INSTANCE.configManager.configs.values.sortedBy { it.name }
         var even = true
-        configs.forEach {
+        configs.filter { it.name.contains(currentSearch, true) }.forEach {
             val node = createConfigNode(it)
             node.background = if (even) EVEN_CONFIG_NODE_COLOR else ODD_CONFIG_NODE_COLOR
             configsList.children.add(node)
