@@ -3,6 +3,7 @@ package com.motompro.tcpconfig.app.controller
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
+import com.motompro.tcpconfig.app.exception.ApplyConfigException
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
@@ -71,7 +72,20 @@ class ConfigController {
 
     @FXML
     private fun onUseButtonClick(event: ActionEvent) {
-
+        if (config == null) {
+            TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Une erreur est survenue")
+            return
+        }
+        try {
+            TCPConfigApp.INSTANCE.netInterfaceManager.applyConfig(config!!)
+            TCPConfigApp.INSTANCE.showInfoAlert("Succès", "La config a bien été appliquée")
+        } catch (ex: ApplyConfigException) {
+            when (ex.type) {
+                ApplyConfigException.Type.NOT_ENOUGH_ARGS -> TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "La config est corrompue")
+                ApplyConfigException.Type.INTERFACE_NOT_CONNECTED -> TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'est pas connectée à un réseau")
+                ApplyConfigException.Type.INTERFACE_NOT_FOUND -> TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'a pas été trouvée sur cet ordinateur")
+            }
+        }
     }
 
     @FXML

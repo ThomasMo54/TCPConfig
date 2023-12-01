@@ -1,5 +1,7 @@
 package com.motompro.tcpconfig.app
 
+import com.motompro.tcpconfig.app.config.Config
+import com.motompro.tcpconfig.app.exception.ApplyConfigException
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -26,6 +28,28 @@ class NetInterfaceManager {
                 emptyList()
             }
         }
+
+    /**
+     * Apply the given config's TCP data to the targeted network interface
+     * @param config the config
+     */
+    fun applyConfig(config: Config) {
+        val commandParams = mutableListOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "applyconfig", "\"${config.networkAdapter}\"", config.ip, config.subnetMask)
+        config.defaultGateway?.let { commandParams.add(it) }
+        if (config.preferredDNS != null && config.auxDNS != null) {
+            commandParams.addAll(listOf(config.preferredDNS!!, config.auxDNS!!))
+        }
+        val reader = startManagerProcess(commandParams)
+        val result = reader.readLine()
+        if (result.startsWith("error")) {
+            val errorType = result.split(" ")[1]
+            when (errorType) {
+                "notconnected" -> throw ApplyConfigException(ApplyConfigException.Type.INTERFACE_NOT_CONNECTED)
+                "notfound" -> throw ApplyConfigException(ApplyConfigException.Type.INTERFACE_NOT_FOUND)
+                else -> throw ApplyConfigException(ApplyConfigException.Type.NOT_ENOUGH_ARGS)
+            }
+        }
+    }
 
     private fun startManagerProcess(args: List<String>): BufferedReader {
         val command = mutableListOf("cmd", "/c", "")
