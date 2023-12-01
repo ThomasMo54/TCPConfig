@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Alert
+import javafx.scene.image.Image
 import javafx.stage.Stage
 import java.io.InputStream
 
@@ -28,6 +29,7 @@ class TCPConfigApp : Application() {
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("main-view.fxml"))
         val scene = Scene(fxmlLoader.load(), DEFAULT_WIDTH, DEFAULT_HEIGHT)
         stage.title = WINDOW_TITLE
+        stage.icons.add(Image(TCPConfigApp::class.java.getResourceAsStream("image/app-icon.png")))
         stage.scene = scene
         stage.show()
     }
