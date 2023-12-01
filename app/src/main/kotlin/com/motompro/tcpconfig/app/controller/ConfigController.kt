@@ -14,6 +14,7 @@ import javafx.scene.control.ButtonType
 import javafx.scene.effect.ColorAdjust
 import javafx.scene.input.MouseEvent
 import javafx.scene.text.Text
+import javafx.stage.FileChooser
 import javafx.util.Duration
 
 
@@ -112,7 +113,12 @@ class ConfigController {
 
     @FXML
     private fun onExportButtonClick(event: ActionEvent) {
-
+        val fileChooser = FileChooser()
+        fileChooser.extensionFilters.add(FileChooser.ExtensionFilter("Fichiers YAML (*.yml)", "*.yml"))
+        val file = fileChooser.showSaveDialog(TCPConfigApp.INSTANCE.stage) ?: return
+        TCPConfigApp.INSTANCE.configManager.saveConfig(config!!, file)
+        val successAlert = Alert(Alert.AlertType.INFORMATION, "La configuration a bien été exportée dans le fichier ${file.name}")
+        successAlert.show()
     }
 
     @FXML

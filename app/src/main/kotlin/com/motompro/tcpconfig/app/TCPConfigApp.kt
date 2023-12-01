@@ -15,9 +15,12 @@ class TCPConfigApp : Application() {
 
     val configManager = ConfigManager()
     val netInterfaceManager = NetInterfaceManager()
+    lateinit var stage: Stage
+        private set
 
     override fun start(stage: Stage) {
         INSTANCE = this
+        this.stage = stage
 
         configManager.loadConfigs()
         netInterfaceManager.netInterfaces.forEach { println(it) }
