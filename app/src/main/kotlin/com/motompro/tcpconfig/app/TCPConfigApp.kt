@@ -8,9 +8,11 @@ import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import java.lang.Integer.min
 
 private const val DEFAULT_WIDTH = 720.0
 private const val DEFAULT_HEIGHT = 480.0
+private const val MAX_ALERT_MESSAGE_LENGTH = 500
 
 class TCPConfigApp : Application() {
 
@@ -37,7 +39,7 @@ class TCPConfigApp : Application() {
         val errorAlert = Alert(Alert.AlertType.ERROR)
         errorAlert.title = title
         errorAlert.headerText = title
-        errorAlert.contentText = message
+        errorAlert.contentText = message.substring(0, min(message.length, MAX_ALERT_MESSAGE_LENGTH))
         errorAlert.dialogPane.minWidth = 500.0
         errorAlert.showAndWait()
     }
@@ -46,7 +48,7 @@ class TCPConfigApp : Application() {
         val infoAlert = Alert(Alert.AlertType.INFORMATION)
         infoAlert.title = title
         infoAlert.headerText = title
-        infoAlert.contentText = message
+        infoAlert.contentText = message.substring(0, min(message.length, MAX_ALERT_MESSAGE_LENGTH))
         infoAlert.dialogPane.minWidth = 500.0
         infoAlert.showAndWait()
     }

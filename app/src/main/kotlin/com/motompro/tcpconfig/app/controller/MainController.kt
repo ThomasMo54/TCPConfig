@@ -3,6 +3,7 @@ package com.motompro.tcpconfig.app.controller
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
+import com.motompro.tcpconfig.app.exception.ResetConfigException
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
@@ -57,20 +58,31 @@ class MainController {
         val fileChooser = FileChooser()
         fileChooser.extensionFilters.add(
             FileChooser.ExtensionFilter(
-                "Fichiers YAML (*.${ConfigManager.CONFIG_FILE_EXTENSION}), Fichiers TCPC (*.${ConfigManager.LEGACY_CONFIG_FILE_EXTENSION})",
+                "Fichiers YAML (*.${ConfigManager.CONFIG_FILE_EXTENSION}), Fichiers TCPC (*.${ConfigManager.LEGACY_CONFIG_FILE_EXTENSION}), Fichiers TXT (*.${ConfigManager.LEGACY_SAVE_FILE_EXTENSION})",
                 "*.${ConfigManager.CONFIG_FILE_EXTENSION}",
                 "*.${ConfigManager.LEGACY_CONFIG_FILE_EXTENSION}",
+                    "*.${ConfigManager.LEGACY_SAVE_FILE_EXTENSION}",
             ),
         )
         val file = fileChooser.showOpenDialog(TCPConfigApp.INSTANCE.stage) ?: return
         try {
             val config = TCPConfigApp.INSTANCE.configManager.loadConfig(file)
-            if (file.extension != ConfigManager.LEGACY_CONFIG_FILE_EXTENSION) {
+            if (file.extension != ConfigManager.LEGACY_CONFIG_FILE_EXTENSION && file.extension != ConfigManager.LEGACY_SAVE_FILE_EXTENSION) {
                 TCPConfigApp.INSTANCE.configManager.saveConfig(config)
             }
             updateConfigList()
             TCPConfigApp.INSTANCE.showInfoAlert("Succès", "La config \"${config.name}\" a bien été importée")
         } catch (_: IllegalArgumentException) {}
+    }
+
+    @FXML
+    private fun onResetButtonClick(event: ActionEvent) {
+        try {
+            TCPConfigApp.INSTANCE.netInterfaceManager.resetConfig()
+            TCPConfigApp.INSTANCE.showInfoAlert("Succès", "Votre configuration TCP a bien été réinitialisée")
+        } catch (ex: ResetConfigException) {
+            TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Impossible de réinitialiser la configuration TCP")
+        }
     }
 
     @FXML

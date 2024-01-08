@@ -19,6 +19,10 @@ namespace NetInterfaceManager {
                     applyConfig(args);
                     break;
                 }
+                case "resetconfig": {
+                    resetConfig();
+                    break;
+                }
             }
         }
 
@@ -94,6 +98,23 @@ namespace NetInterfaceManager {
             } else {
                 Console.WriteLine("error notfound");
             }
+        }
+
+        static void resetConfig() {
+            ManagementClass objMC = new ManagementClass("Win32_NetworkAdapterConfiguration");
+            ManagementObjectCollection objMOC = objMC.GetInstances();
+
+            foreach (ManagementObject objMO in objMOC) {
+                if (!((bool)objMO["IPEnabled"])) continue;
+                // Reset IP
+                objMO.InvokeMethod("EnableDHCP", null);
+                // Reset DNS
+                ManagementBaseObject newDNS = objMO.GetMethodParameters("SetDNSServerSearchOrder");
+                newDNS["DNSServerSearchOrder"] = null;
+                objMO.InvokeMethod("SetDNSServerSearchOrder", newDNS, null);
+            }
+
+            Console.WriteLine("success");
         }
     }
 }

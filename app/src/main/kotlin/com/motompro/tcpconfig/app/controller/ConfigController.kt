@@ -30,8 +30,7 @@ class ConfigController {
             field = value
             if (value == null) return
             configNameText.text = value.name
-            configAdapterText.text = value.networkAdapter
-            val properties = mutableListOf(value.ip, value.subnetMask)
+            val properties = mutableListOf(value.networkAdapter, value.ip, value.subnetMask)
             if (value.defaultGateway != null) properties.add(value.defaultGateway!!)
             configPropertiesText.text = properties.joinToString("  |  ")
         }
@@ -40,8 +39,6 @@ class ConfigController {
 
     @FXML
     private lateinit var configNameText: Text
-    @FXML
-    private lateinit var configAdapterText: Text
     @FXML
     private lateinit var configPropertiesText: Text
     @FXML

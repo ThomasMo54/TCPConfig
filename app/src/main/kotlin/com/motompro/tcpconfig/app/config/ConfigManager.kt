@@ -15,6 +15,7 @@ import java.io.FileWriter
 import java.io.IOException
 import java.util.Locale
 
+private const val MAX_CONFIG_DATA_NUMBER = 7
 
 /**
  * This class manages configs operations such as loading or deleting
@@ -66,18 +67,9 @@ class ConfigManager {
                 TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier mal formatté (${configFile.name})")
                 throw IllegalArgumentException()
             }
-            val name = findNotUsedName(lines[0])
-            val config = Config(
-                name,
-                lines[1],
-                lines[2],
-                lines[3],
-                if (lines.size >= 5) lines[4] else null,
-                if (lines.size >= 6) lines[5] else null,
-                if (lines.size >= 7) lines[6] else null,
-            )
-            val destinationFile = File(configsDirectory, "$name.yml")
-            _configs[name] = config to destinationFile
+            val config = createConfigFromDataList(lines)
+            val destinationFile = File(configsDirectory, "${config.name}.yml")
+            _configs[config.name] = config to destinationFile
             try {
                 saveConfig(config, destinationFile)
                 configFile.delete()
@@ -85,6 +77,32 @@ class ConfigManager {
                 TCPConfigApp.INSTANCE.showErrorAlert("Erreur", ex.stackTraceToString())
             }
             return config
+        }
+        if (configFile.extension == LEGACY_SAVE_FILE_EXTENSION) {
+            val lines = configFile.readLines()
+            if (lines.size < MAX_CONFIG_DATA_NUMBER) {
+                TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier mal formatté (${configFile.name})")
+                throw IllegalArgumentException()
+            }
+            var configLineNumber = 0
+            var firstConfig: Config? = null
+            while (configLineNumber + MAX_CONFIG_DATA_NUMBER <= lines.size) {
+                val dataLines = mutableListOf<String>()
+                for (i in 0 until MAX_CONFIG_DATA_NUMBER) {
+                    if (lines[configLineNumber + i].isNotBlank()) dataLines.add(lines[configLineNumber + i])
+                }
+                val config = createConfigFromDataList(dataLines)
+                if (firstConfig == null) firstConfig = config
+                val destinationFile = File(configsDirectory, "${config.name}.yml")
+                _configs[config.name] = config to destinationFile
+                try {
+                    saveConfig(config, destinationFile)
+                } catch (ex: IOException) {
+                    TCPConfigApp.INSTANCE.showErrorAlert("Erreur", ex.stackTraceToString())
+                }
+                configLineNumber += MAX_CONFIG_DATA_NUMBER
+            }
+            return firstConfig!!
         }
         if (configFile.extension != CONFIG_FILE_EXTENSION) {
             TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier non reconnu (${configFile.name})")
@@ -97,6 +115,19 @@ class ConfigManager {
         _configs[name] = config to configFile
         inputStream.close()
         return config
+    }
+
+    private fun createConfigFromDataList(dataList: List<String>): Config {
+        val name = findNotUsedName(dataList[0])
+        return Config(
+                name,
+                dataList[1],
+                dataList[2],
+                dataList[3],
+                if (dataList.size >= 5) dataList[4] else null,
+                if (dataList.size >= 6) dataList[5] else null,
+                if (dataList.size >= 7) dataList[6] else null,
+        )
     }
 
     /**
@@ -151,6 +182,7 @@ class ConfigManager {
     companion object {
         const val CONFIG_FILE_EXTENSION = "yml"
         const val LEGACY_CONFIG_FILE_EXTENSION = "tcpc"
+        const val LEGACY_SAVE_FILE_EXTENSION = "txt"
 
         /**
          * Used to convert properties name that contain dashes to camel case

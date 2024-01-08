@@ -2,6 +2,7 @@ package com.motompro.tcpconfig.app
 
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.exception.ApplyConfigException
+import com.motompro.tcpconfig.app.exception.ResetConfigException
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -11,7 +12,7 @@ private const val NET_INTERFACE_MANAGER_SCRIPT = "NetInterfaceManager.exe"
 
 class NetInterfaceManager {
 
-    private val appPath = File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path).parentFile.absolutePath
+    private val appPath = File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path.replace("%20", " ")).parentFile.absolutePath
 
     val netInterfaces: List<String>
         get() {
@@ -48,6 +49,17 @@ class NetInterfaceManager {
                 "notfound" -> throw ApplyConfigException(ApplyConfigException.Type.INTERFACE_NOT_FOUND)
                 else -> throw ApplyConfigException(ApplyConfigException.Type.NOT_ENOUGH_ARGS)
             }
+        }
+    }
+
+    /**
+     * Reset TCP configuration to default values
+     */
+    fun resetConfig() {
+        val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "resetconfig"))
+        val result = reader.readLine()
+        if (result.startsWith("error")) {
+            throw ResetConfigException()
         }
     }
 
