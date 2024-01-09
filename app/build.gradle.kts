@@ -7,8 +7,8 @@ plugins {
     id("edu.sc.seis.launch4j").version("3.0.4")
 }
 
-group = "com.motompro.tcpconfig"
-version = "2.0"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()
@@ -21,6 +21,14 @@ dependencies {
 application {
     mainModule = "com.motompro.tcpconfig.app"
     mainClass = "com.motompro.tcpconfig.app.TCPConfigApp"
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs(project.file("version"))
+        }
+    }
 }
 
 kotlin {

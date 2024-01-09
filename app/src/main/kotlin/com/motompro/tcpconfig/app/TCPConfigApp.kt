@@ -8,6 +8,9 @@ import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.lang.Integer.min
 
 private const val DEFAULT_WIDTH = 720.0
@@ -16,8 +19,11 @@ private const val MAX_ALERT_MESSAGE_LENGTH = 500
 
 class TCPConfigApp : Application() {
 
+    private val version = readVersion()
+
     val configManager = ConfigManager()
     val netInterfaceManager = NetInterfaceManager()
+
     lateinit var stage: Stage
         private set
 
@@ -29,10 +35,17 @@ class TCPConfigApp : Application() {
 
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("main-view.fxml"))
         val scene = Scene(fxmlLoader.load(), DEFAULT_WIDTH, DEFAULT_HEIGHT)
-        stage.title = WINDOW_TITLE
+        stage.title = "$WINDOW_TITLE $version"
         stage.icons.add(Image(TCPConfigApp::class.java.getResourceAsStream("image/app-icon.png")))
         stage.scene = scene
         stage.show()
+    }
+
+    private fun readVersion(): String {
+        val reader = BufferedReader(InputStreamReader(TCPConfigApp::class.java.getResourceAsStream("version.txt") ?: return "?"))
+        val version = reader.readLine().trim()
+        reader.close()
+        return version
     }
 
     fun showErrorAlert(title: String, message: String) {
@@ -68,8 +81,7 @@ class TCPConfigApp : Application() {
     }
 
     companion object {
-        const val VERSION = "2.0"
-        const val WINDOW_TITLE = "TCPConfig $VERSION"
+        const val WINDOW_TITLE = "TCPConfig"
         lateinit var INSTANCE: TCPConfigApp
             private set
     }
