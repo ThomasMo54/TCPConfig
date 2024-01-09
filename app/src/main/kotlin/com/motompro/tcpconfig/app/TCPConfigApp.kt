@@ -42,7 +42,7 @@ class TCPConfigApp : Application() {
     }
 
     private fun readVersion(): String {
-        val reader = BufferedReader(InputStreamReader(TCPConfigApp::class.java.getResourceAsStream("version.txt") ?: return "?"))
+        val reader = BufferedReader(InputStreamReader(TCPConfigApp::class.java.getResourceAsStream("/version.txt") ?: return "?"))
         val version = reader.readLine().trim()
         reader.close()
         return version

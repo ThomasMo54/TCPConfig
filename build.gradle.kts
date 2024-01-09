@@ -1,5 +1,5 @@
 group = "com.motompro.tcpconfig"
-version = project(":app").file("version/com/motompro/tcpconfig/app/version.txt").readText().trim()
+version = "2.0.0"
 
 tasks.register<Copy>("addExecutablesToDistribution") {
     from(

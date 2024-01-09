@@ -6,3 +6,4 @@ rootProject.name = "tcpconfig"
 
 include("app")
 include("net-interface-manager")
+include("updater")
