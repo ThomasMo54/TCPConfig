@@ -8,6 +8,7 @@ import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
+import java.io.IOException
 
 private const val CONFIG_NAME_MAX_LENGTH = 50
 private val IP_ADDRESS_REGEX = "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}\$".toRegex()
@@ -32,9 +33,13 @@ class AddEditConfigController {
     @FXML
     private fun initialize() {
         MainController.addDarkenEffect(backButton)
-        val netInterfaces = TCPConfigApp.INSTANCE.netInterfaceManager.netInterfaces.sorted()
-        netInterfaceComboBox.items.addAll(netInterfaces)
-        netInterfaceComboBox.selectionModel.selectFirst()
+        try {
+            val netInterfaces = TCPConfigApp.INSTANCE.netInterfaceManager.netInterfaces.sorted()
+            netInterfaceComboBox.items.addAll(netInterfaces)
+            netInterfaceComboBox.selectionModel.selectFirst()
+        } catch (ex: IOException) {
+            TCPConfigApp.INSTANCE.showErrorAlert("Erreur", ex.stackTraceToString())
+        }
     }
 
     @FXML

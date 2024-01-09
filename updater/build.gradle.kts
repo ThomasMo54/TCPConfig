@@ -20,6 +20,7 @@ application {
 tasks {
     withType<ProcessResources> {
         val versionFile = File(rootDir, "version.txt")
+        versionFile.delete()
         versionFile.createNewFile()
         versionFile.writeText("${rootProject.version}")
         from(versionFile)
@@ -31,10 +32,10 @@ kotlin {
 }
 
 launch4j {
-    outfile = "upgrader.exe"
+    outfile = "updater.exe"
     bundledJrePath = "jre"
     jreMinVersion = "17"
     mainClassName = "com.motompro.tcpconfig.updater.UpdaterAppKt"
-    productName = "upgrader"
+    productName = "updater"
     setJarTask(project.tasks["jar"])
 }

@@ -16,18 +16,13 @@ class NetInterfaceManager {
 
     val netInterfaces: List<String>
         get() {
-            return try {
-                val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "getinterfaces"))
-                val interfaceAmount = reader.readLine()?.toInt() ?: 0
-                val interfaces = mutableListOf<String>()
-                for (i in 0 until interfaceAmount) {
-                    interfaces.add(reader.readLine())
-                }
-                interfaces
-            } catch (ex: IOException) {
-                TCPConfigApp.INSTANCE.showErrorAlert("Erreur", ex.stackTraceToString())
-                emptyList()
+            val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "getinterfaces"))
+            val interfaceAmount = reader.readLine()?.toInt() ?: 0
+            val interfaces = mutableListOf<String>()
+            for (i in 0 until interfaceAmount) {
+                interfaces.add(reader.readLine())
             }
+            return interfaces
         }
 
     /**
