@@ -1,4 +1,4 @@
-package com.motompro.tcpconfig.app.controller
+package com.motompro.tcpconfig.app.component.progressdialog
 
 import javafx.fxml.FXML
 import javafx.scene.control.ProgressBar

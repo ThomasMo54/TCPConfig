@@ -1,7 +1,7 @@
 package com.motompro.tcpconfig.app
 
 import com.google.gson.JsonParser
-import com.motompro.tcpconfig.app.component.ProgressDialog
+import com.motompro.tcpconfig.app.component.progressdialog.ProgressDialog
 import com.motompro.tcpconfig.app.config.ConfigManager
 import javafx.application.Application
 import javafx.application.Platform
@@ -183,6 +183,8 @@ class TCPConfigApp : Application() {
 
     companion object {
         const val WINDOW_TITLE = "TCPConfig"
+        val IP_ADDRESS_REGEX = "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}\$".toRegex()
+
         lateinit var INSTANCE: TCPConfigApp
             private set
     }

@@ -1,7 +1,6 @@
-package com.motompro.tcpconfig.app.component
+package com.motompro.tcpconfig.app.component.progressdialog
 
 import com.motompro.tcpconfig.app.TCPConfigApp
-import com.motompro.tcpconfig.app.controller.ProgressDialogController
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
 import javafx.scene.Scene

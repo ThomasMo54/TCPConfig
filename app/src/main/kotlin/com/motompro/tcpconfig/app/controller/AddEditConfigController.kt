@@ -11,7 +11,6 @@ import javafx.scene.control.TextField
 import java.io.IOException
 
 private const val CONFIG_NAME_MAX_LENGTH = 50
-private val IP_ADDRESS_REGEX = "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}\$".toRegex()
 
 class AddEditConfigController {
 
@@ -125,7 +124,7 @@ class AddEditConfigController {
             auxDNSTextField to "DNS Auxiliaire",
         )
         ipFields.filter { it.key.text.isNotBlank() }.forEach {
-            if (!IP_ADDRESS_REGEX.matches(it.key.text)) throw InvalidConfigFieldException(InvalidConfigFieldException.Type.BAD_IP_FORMAT, it.value)
+            if (!TCPConfigApp.IP_ADDRESS_REGEX.matches(it.key.text)) throw InvalidConfigFieldException(InvalidConfigFieldException.Type.BAD_IP_FORMAT, it.value)
         }
         if ((favDNSTextField.text.isNotBlank() && auxDNSTextField.text.isBlank()) || favDNSTextField.text.isBlank() && auxDNSTextField.text.isNotBlank()) {
             throw InvalidConfigFieldException(InvalidConfigFieldException.Type.MISSING_DNS_FIELD)

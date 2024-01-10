@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" spacing="10.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.motompro.tcpconfig.app.component.RangeComponent">
+   <children>
+      <TextField fx:id="rangeStartTextField" prefWidth="136.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="à" />
+      <TextField fx:id="rangeEndTextField" layoutX="247.0" layoutY="198.0" prefWidth="136.0" />
+   </children>
+</HBox>

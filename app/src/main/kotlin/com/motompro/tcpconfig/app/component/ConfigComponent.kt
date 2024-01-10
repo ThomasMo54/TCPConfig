@@ -1,13 +1,11 @@
-package com.motompro.tcpconfig.app.controller
+package com.motompro.tcpconfig.app.component
 
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
+import com.motompro.tcpconfig.app.controller.AddEditConfigController
+import com.motompro.tcpconfig.app.controller.MainController
 import com.motompro.tcpconfig.app.exception.ApplyConfigException
-import javafx.animation.Interpolator
-import javafx.animation.KeyFrame
-import javafx.animation.KeyValue
-import javafx.animation.Timeline
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -15,15 +13,13 @@ import javafx.scene.Scene
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonType
-import javafx.scene.effect.ColorAdjust
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.text.Text
 import javafx.stage.FileChooser
-import javafx.util.Duration
 
 
-class ConfigController {
+class ConfigComponent {
 
     var config: Config? = null
         set(value) {

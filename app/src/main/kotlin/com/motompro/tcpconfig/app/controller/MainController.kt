@@ -1,9 +1,11 @@
 package com.motompro.tcpconfig.app.controller
 
 import com.motompro.tcpconfig.app.TCPConfigApp
+import com.motompro.tcpconfig.app.component.ConfigComponent
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
 import com.motompro.tcpconfig.app.exception.ResetConfigException
+import com.motompro.tcpconfig.app.util.IPRange
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
@@ -13,6 +15,7 @@ import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
 import javafx.scene.control.Button
+import javafx.scene.control.SplitPane
 import javafx.scene.control.TextField
 import javafx.scene.effect.ColorAdjust
 import javafx.scene.layout.Background
@@ -33,11 +36,14 @@ private const val MOTOMPRO_WEBSITE = "http://motompro.com"
 class MainController {
 
     private var currentSearch = ""
+    private var pingController: PingController? = null
 
     @FXML
     private lateinit var searchTextField: TextField
     @FXML
     private lateinit var configsList: VBox
+    @FXML
+    private lateinit var splitPane: SplitPane
 
     @FXML
     private fun initialize() {
@@ -46,6 +52,7 @@ class MainController {
             currentSearch = newValue
             updateConfigList()
         }
+        splitPane.setDividerPositions(0.5, 0.5)
     }
 
     @FXML
@@ -61,7 +68,7 @@ class MainController {
                 "Fichiers YAML (*.${ConfigManager.CONFIG_FILE_EXTENSION}), Fichiers TCPC (*.${ConfigManager.LEGACY_CONFIG_FILE_EXTENSION}), Fichiers TXT (*.${ConfigManager.LEGACY_SAVE_FILE_EXTENSION})",
                 "*.${ConfigManager.CONFIG_FILE_EXTENSION}",
                 "*.${ConfigManager.LEGACY_CONFIG_FILE_EXTENSION}",
-                    "*.${ConfigManager.LEGACY_SAVE_FILE_EXTENSION}",
+                "*.${ConfigManager.LEGACY_SAVE_FILE_EXTENSION}",
             ),
         )
         val file = fileChooser.showOpenDialog(TCPConfigApp.INSTANCE.stage) ?: return
@@ -86,6 +93,11 @@ class MainController {
     }
 
     @FXML
+    private fun onPingButtonClick(event: ActionEvent) {
+        TCPConfigApp.INSTANCE.swapScene("create-ping-view.fxml")
+    }
+
+    @FXML
     private fun onWebsiteHyperlinkClick(event: ActionEvent) {
         Desktop.getDesktop().browse(URL(MOTOMPRO_WEBSITE).toURI())
     }
@@ -103,15 +115,35 @@ class MainController {
         }
     }
 
+    fun openPingTab(pingAddresses: List<String>) {
+        if (pingController != null) {
+            closePingTab()
+        }
+        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("ping-view.fxml"))
+        val node = fxmlLoader.load<BorderPane>()
+        node.prefHeightProperty().bind(splitPane.heightProperty())
+        SplitPane.setResizableWithParent(node, true)
+        pingController = fxmlLoader.getController<PingController>()
+        pingController!!.mainController = this
+        pingController!!.pingAddresses = pingAddresses
+        splitPane.items.add(node)
+        splitPane.setDividerPositions(0.5, 0.5)
+    }
+
+    fun closePingTab() {
+        splitPane.items.removeLastOrNull()
+        splitPane.setDividerPositions(1.0)
+    }
+
     /**
      * Create a config node based on the config data
      * @param config the config data
      * @return the config node
      */
     private fun createConfigNode(config: Config): BorderPane {
-        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("config-view.fxml"))
+        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("config-component.fxml"))
         val node = fxmlLoader.load<BorderPane>()
-        val controller = fxmlLoader.getController<ConfigController>()
+        val controller = fxmlLoader.getController<ConfigComponent>()
         controller.config = config
         controller.mainController = this
         return node
@@ -132,7 +164,7 @@ class MainController {
                             Interpolator.LINEAR,
                         ),
                     ),
-                    KeyFrame(Duration.seconds(0.2), KeyValue(colorAdjust.brightnessProperty(), -0.2, Interpolator.LINEAR))
+                    KeyFrame(Duration.seconds(0.1), KeyValue(colorAdjust.brightnessProperty(), -0.2, Interpolator.LINEAR))
                 )
                 fadeInTimeline.cycleCount = 1
                 fadeInTimeline.isAutoReverse = false
@@ -148,7 +180,7 @@ class MainController {
                             Interpolator.LINEAR,
                         ),
                     ),
-                    KeyFrame(Duration.seconds(0.2), KeyValue(colorAdjust.brightnessProperty(), 0, Interpolator.LINEAR))
+                    KeyFrame(Duration.seconds(0.1), KeyValue(colorAdjust.brightnessProperty(), 0, Interpolator.LINEAR))
                 )
                 fadeOutTimeline.cycleCount = 1
                 fadeOutTimeline.isAutoReverse = false
