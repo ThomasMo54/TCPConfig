@@ -26,12 +26,12 @@ class ConfigManager {
     val configs: Map<String, Config>
         get() = _configs.mapValues { it.value.first }
 
-    private val configsDirectory = File(File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path).parentFile, "configs")
+    private val configsDirectory = File(File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path.replace("%20", " ")).parentFile, "configs")
     private val yamlLoader: Yaml
 
     init {
         val loaderOptions = LoaderOptions()
-        loaderOptions.tagInspector = TagInspector { tag: Tag -> tag.getClassName() == Config::class.java.name }
+        loaderOptions.tagInspector = TagInspector { tag: Tag -> tag.className == Config::class.java.name }
         val constructor = CustomClassLoaderConstructor(javaClass.classLoader, loaderOptions)
         constructor.propertyUtils = PROPERTY_UTILS
         yamlLoader = Yaml(constructor)
