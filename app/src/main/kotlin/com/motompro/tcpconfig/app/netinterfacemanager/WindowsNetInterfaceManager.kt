@@ -1,20 +1,20 @@
-package com.motompro.tcpconfig.app
+package com.motompro.tcpconfig.app.netinterfacemanager
 
+import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.exception.ApplyConfigException
 import com.motompro.tcpconfig.app.exception.ResetConfigException
 import java.io.BufferedReader
 import java.io.File
-import java.io.IOException
 import java.io.InputStreamReader
 
 private const val NET_INTERFACE_MANAGER_SCRIPT = "NetInterfaceManager.exe"
 
-class NetInterfaceManager {
+class WindowsNetInterfaceManager : NetInterfaceManager {
 
     private val appPath = File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path.replace("%20", " ")).parentFile.absolutePath
 
-    val netInterfaces: List<String>
+    override val netInterfaces: List<String>
         get() {
             val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "getinterfaces"))
             val interfaceAmount = reader.readLine()?.toInt() ?: 0
@@ -25,11 +25,7 @@ class NetInterfaceManager {
             return interfaces
         }
 
-    /**
-     * Apply the given config's TCP data to the targeted network interface
-     * @param config the config
-     */
-    fun applyConfig(config: Config) {
+    override fun applyConfig(config: Config) {
         val commandParams = mutableListOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "applyconfig", "\"${config.networkAdapter}\"", config.ip, config.subnetMask)
         config.defaultGateway?.let { commandParams.add(it) }
         if (config.preferredDNS != null && config.auxDNS != null) {
@@ -47,10 +43,7 @@ class NetInterfaceManager {
         }
     }
 
-    /**
-     * Reset TCP configuration to default values
-     */
-    fun resetConfig() {
+    override fun resetConfig() {
         val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "resetconfig"))
         val result = reader.readLine()
         if (result.startsWith("error")) {

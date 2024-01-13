@@ -3,6 +3,8 @@ package com.motompro.tcpconfig.app
 import com.google.gson.JsonParser
 import com.motompro.tcpconfig.app.component.progressdialog.ProgressDialog
 import com.motompro.tcpconfig.app.config.ConfigManager
+import com.motompro.tcpconfig.app.netinterfacemanager.NetInterfaceManager
+import com.motompro.tcpconfig.app.netinterfacemanager.WindowsNetInterfaceManager
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.fxml.FXMLLoader
@@ -44,7 +46,7 @@ class TCPConfigApp : Application() {
     private val resources = mutableMapOf<String, URL>()
 
     val configManager = ConfigManager()
-    val netInterfaceManager = NetInterfaceManager()
+    val netInterfaceManager: NetInterfaceManager = WindowsNetInterfaceManager()
 
     lateinit var stage: Stage
         private set
