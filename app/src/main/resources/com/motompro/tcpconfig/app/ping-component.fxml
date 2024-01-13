@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane fx:id="componentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.motompro.tcpconfig.app.component.PingComponent">
+   <left>
+      <Text fx:id="addressText" strokeType="OUTSIDE" strokeWidth="0.0" BorderPane.alignment="CENTER" />
+   </left>
+   <padding>
+      <Insets left="5.0" right="15.0" />
+   </padding>
+   <right>
+      <HBox alignment="CENTER" prefHeight="30.0" spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text fx:id="liveText" strokeType="OUTSIDE" strokeWidth="0.0" text="LIVE" visible="false" />
+            <Button mnemonicParsing="false" onAction="#onLiveButtonClick" prefHeight="16.0" prefWidth="16.0" style="-fx-background-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;">
+               <graphic>
+                  <ImageView fx:id="liveIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@image/not-live-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Passer en live" />
+               </tooltip>
+            </Button>
+         </children>
+      </HBox>
+   </right>
+</BorderPane>

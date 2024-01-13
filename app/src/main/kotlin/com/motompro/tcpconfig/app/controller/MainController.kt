@@ -14,6 +14,7 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.SplitPane
 import javafx.scene.control.TextField
@@ -31,7 +32,10 @@ import java.net.URL
 
 private val EVEN_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.95, 0.95, 0.95), CornerRadii.EMPTY, Insets.EMPTY))
 private val ODD_CONFIG_NODE_COLOR = Background(BackgroundFill(Color.color(0.9, 0.9, 0.9), CornerRadii.EMPTY, Insets.EMPTY))
+
 private const val MOTOMPRO_WEBSITE = "http://motompro.com"
+
+private const val PING_TAB_SIZE_RATIO = 0.25
 
 class MainController {
 
@@ -52,16 +56,15 @@ class MainController {
             currentSearch = newValue
             updateConfigList()
         }
-        splitPane.setDividerPositions(0.5, 0.5)
     }
 
     @FXML
-    private fun onAddConfigButtonClick(event: ActionEvent) {
+    private fun onAddConfigButtonClick() {
         TCPConfigApp.INSTANCE.swapScene("add-edit-config-view.fxml")
     }
 
     @FXML
-    private fun onImportConfigButtonClick(event: ActionEvent) {
+    private fun onImportConfigButtonClick() {
         val fileChooser = FileChooser()
         fileChooser.extensionFilters.add(
             FileChooser.ExtensionFilter(
@@ -83,7 +86,7 @@ class MainController {
     }
 
     @FXML
-    private fun onResetButtonClick(event: ActionEvent) {
+    private fun onResetButtonClick() {
         try {
             TCPConfigApp.INSTANCE.netInterfaceManager.resetConfig()
             TCPConfigApp.INSTANCE.showInfoAlert("Succès", "Votre configuration TCP a bien été réinitialisée")
@@ -93,12 +96,12 @@ class MainController {
     }
 
     @FXML
-    private fun onPingButtonClick(event: ActionEvent) {
+    private fun onPingButtonClick() {
         TCPConfigApp.INSTANCE.swapScene("create-ping-view.fxml")
     }
 
     @FXML
-    private fun onWebsiteHyperlinkClick(event: ActionEvent) {
+    private fun onWebsiteHyperlinkClick() {
         Desktop.getDesktop().browse(URL(MOTOMPRO_WEBSITE).toURI())
     }
 
@@ -122,12 +125,12 @@ class MainController {
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("ping-view.fxml"))
         val node = fxmlLoader.load<BorderPane>()
         node.prefHeightProperty().bind(splitPane.heightProperty())
-        SplitPane.setResizableWithParent(node, true)
         pingController = fxmlLoader.getController<PingController>()
         pingController!!.mainController = this
         pingController!!.pingAddresses = pingAddresses
         splitPane.items.add(node)
-        splitPane.setDividerPositions(0.5, 0.5)
+        splitPane.setDividerPositions(1 - PING_TAB_SIZE_RATIO, PING_TAB_SIZE_RATIO)
+        pingController!!.doPings()
     }
 
     fun closePingTab() {
@@ -171,20 +174,8 @@ class MainController {
                 fadeInTimeline.play()
             }
             button.setOnMouseExited {
-                val fadeOutTimeline = Timeline(
-                    KeyFrame(
-                        Duration.seconds(0.0),
-                        KeyValue(
-                            colorAdjust.brightnessProperty(),
-                            colorAdjust.brightnessProperty().value,
-                            Interpolator.LINEAR,
-                        ),
-                    ),
-                    KeyFrame(Duration.seconds(0.1), KeyValue(colorAdjust.brightnessProperty(), 0, Interpolator.LINEAR))
-                )
-                fadeOutTimeline.cycleCount = 1
-                fadeOutTimeline.isAutoReverse = false
-                fadeOutTimeline.play()
+                colorAdjust.brightnessProperty().value = 0.0
+                button.effect = colorAdjust
             }
         }
     }

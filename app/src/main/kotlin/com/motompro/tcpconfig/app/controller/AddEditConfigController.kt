@@ -42,12 +42,12 @@ class AddEditConfigController {
     }
 
     @FXML
-    private fun onBackButtonClick(event: ActionEvent) {
+    private fun onBackButtonClick() {
         TCPConfigApp.INSTANCE.swapScene("main-view.fxml")
     }
 
     @FXML
-    private fun onValidateButtonClick(event: ActionEvent) {
+    private fun onValidateButtonClick() {
         try {
             validateFields()
             if (configInEdition != null) {
@@ -115,6 +115,9 @@ class AddEditConfigController {
         }
         if (nameTextField.text.length > CONFIG_NAME_MAX_LENGTH) {
             throw InvalidConfigFieldException(InvalidConfigFieldException.Type.NAME_TOO_LONG)
+        }
+        if (netInterfaceComboBox.value == null || netInterfaceComboBox.value.isBlank()) {
+            throw InvalidConfigFieldException(InvalidConfigFieldException.Type.MISSING_MANDATORY_FIELD, "Interface réseau")
         }
         val ipFields = mapOf(
             ipTextField to "Adresse IP",

@@ -18,7 +18,6 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.text.Text
 import javafx.stage.FileChooser
 
-
 class ConfigComponent {
 
     var config: Config? = null

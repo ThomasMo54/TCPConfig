@@ -41,6 +41,7 @@ private const val FILE_DOWNLOAD_BUFFER_SIZE = 1024
 class TCPConfigApp : Application() {
 
     private val version = readVersion()
+    private val resources = mutableMapOf<String, URL>()
 
     val configManager = ConfigManager()
     val netInterfaceManager = NetInterfaceManager()
@@ -54,7 +55,9 @@ class TCPConfigApp : Application() {
 
         configManager.loadConfigs()
 
-        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("main-view.fxml"))
+        val resource = TCPConfigApp::class.java.getResource("main-view.fxml")
+        if (resource != null) resources["main-view.fxml"] = resource
+        val fxmlLoader = FXMLLoader(resource)
         val scene = Scene(fxmlLoader.load(), DEFAULT_WIDTH, DEFAULT_HEIGHT)
         stage.title = "$WINDOW_TITLE $version"
         stage.icons.add(Image(TCPConfigApp::class.java.getResourceAsStream("image/app-icon.png")))
@@ -168,17 +171,24 @@ class TCPConfigApp : Application() {
     }
 
     fun swapScene(sceneView: String) {
-        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource(sceneView))
+        val fxmlLoader = FXMLLoader(getResourceOrLoad(sceneView))
         val scene = Scene(fxmlLoader.load(), stage.scene.width, stage.scene.height)
         stage.scene = scene
     }
 
     fun <T> swapScene(sceneView: String): T {
-        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource(sceneView))
+        val fxmlLoader = FXMLLoader(getResourceOrLoad(sceneView))
         val parent = fxmlLoader.load<Parent>()
         val scene = Scene(parent, stage.scene.width, stage.scene.height)
         stage.scene = scene
         return fxmlLoader.getController()
+    }
+
+    fun getResourceOrLoad(resourceName: String): URL? {
+        if (resources.containsKey(resourceName)) return resources[resourceName]!!
+        val resource = TCPConfigApp::class.java.getResource(resourceName) ?: return null
+        resources[resourceName] = resource
+        return resource
     }
 
     companion object {

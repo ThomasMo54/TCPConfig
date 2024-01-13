@@ -4,9 +4,12 @@ import com.motompro.tcpconfig.app.TCPConfigApp
 import java.net.Inet4Address
 
 class IPRange(
-    private val start: String,
-    private val end: String,
+    start: String,
+    end: String,
 ) {
+
+    val startIP: String
+    val endIP: String
 
     /**
      * Check if the two IP addresses passed in constructor have a valid IPv4 format
@@ -16,49 +19,42 @@ class IPRange(
     /**
      * Get a list of every IP address situated between the two passed in constructor (both included)
      */
-    val ipList by lazy {
-        if (!isValid) return@lazy emptyList<String>()
+    val ipList = mutableListOf<String>()
 
-        // Convert to int and then to string to make sure addresses are well formatted (e.g. 192.168.1.054 -> 192.168.1.54)
-        var startIP = start.split(".").map { it.toInt() }.joinToString(".")
-        var endIP = end.split(".").map { it.toInt() }.joinToString(".")
+    init {
+        if (isValid) {
+            // Convert to int and then to string to make sure addresses are well formatted (e.g. 192.168.1.054 -> 192.168.1.54)
+            val formattedStartIP = start.split(".").map { it.toInt() }.joinToString(".")
+            val formattedEndIP = end.split(".").map { it.toInt() }.joinToString(".")
 
-        if (startIP == endIP) return@lazy listOf(startIP)
-
-        if (isIPSmallerThanOther(endIP, startIP)) {
-            val tmp = startIP
-            startIP = endIP
-            endIP = tmp
-        }
-
-        var currentIP = startIP
-        val maxIP = getNextIP(endIP)
-        val list = mutableListOf<String>()
-        while (currentIP != maxIP) {
-            if (!currentIP.endsWith(".0") && !currentIP.endsWith(".255")) {
-                list.add(currentIP)
+            if (isIPSmallerThanOther(formattedStartIP, formattedEndIP)) {
+                startIP = formattedStartIP
+                endIP = formattedEndIP
+            } else {
+                startIP = formattedEndIP
+                endIP = formattedStartIP
             }
-            currentIP = getNextIP(currentIP)
-        }
 
-        list
+            // Initialize list
+            var currentIP = startIP
+            val maxIP = getNextIP(endIP)
+            while (currentIP != maxIP) {
+                if (!currentIP.endsWith(".0") && !currentIP.endsWith(".255")) {
+                    ipList.add(currentIP)
+                }
+                currentIP = getNextIP(currentIP)
+            }
+        } else {
+            startIP = start
+            endIP = end
+        }
     }
 
-    /**
-     * Check if the first IP address is before the second one in numeric order (e.g 192.168.0.1 is just before
-     * 192.168.0.2)
-     * @param ip1 the IP address to compare
-     * @param ip2 the IP address we compare the first to
-     * @return *true* if the address is before, *false* otherwise
-     */
-    private fun isIPSmallerThanOther(ip1: String, ip2: String): Boolean {
-        val address1 = ip1.split(".").map { it.toInt() }
-        val address2 = ip2.split(".").map { it.toInt() }
-        for (i in address1.indices) {
-            if (address1[i] < address2[i]) return true
-            if (address1[i] > address2[i]) return false
-        }
-        return false
+    fun isOverlapping(range: IPRange): Boolean {
+        return startIP == range.startIP || startIP == range.endIP || endIP == range.startIP || endIP == range.endIP ||
+                (isIPSmallerThanOther(startIP, range.endIP) && isIPSmallerThanOther(range.startIP, startIP)) ||
+                (isIPSmallerThanOther(endIP, range.endIP) && isIPSmallerThanOther(range.startIP, endIP)) ||
+                (isIPSmallerThanOther(startIP, range.startIP) && isIPSmallerThanOther(range.endIP, endIP))
     }
 
     /**
@@ -89,5 +85,24 @@ class IPRange(
             numbers[3]++
         }
         return numbers.joinToString(".")
+    }
+
+    companion object {
+        /**
+         * Check if the first IP address is before the second one in numeric order (e.g 192.168.0.1 is just before
+         * 192.168.0.2)
+         * @param ip1 the IP address to compare
+         * @param ip2 the IP address we compare the first to
+         * @return *true* if the address is before, *false* otherwise
+         */
+        fun isIPSmallerThanOther(ip1: String, ip2: String): Boolean {
+            val address1 = ip1.split(".").map { it.toInt() }
+            val address2 = ip2.split(".").map { it.toInt() }
+            for (i in address1.indices) {
+                if (address1[i] < address2[i]) return true
+                if (address1[i] > address2[i]) return false
+            }
+            return false
+        }
     }
 }
