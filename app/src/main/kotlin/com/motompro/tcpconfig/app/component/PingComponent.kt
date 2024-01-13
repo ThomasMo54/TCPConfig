@@ -13,13 +13,16 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.CornerRadii
 import javafx.scene.paint.Color
 import javafx.scene.text.Text
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.net.InetAddress
+import java.net.UnknownHostException
 
 private val PING_FAIL_COLOR = Background(BackgroundFill(Color.color(1.0, 0.75, 0.75), CornerRadii.EMPTY, Insets.EMPTY))
 private val PING_SUCCESS_COLOR = Background(BackgroundFill(Color.color(0.75, 1.0, 0.75), CornerRadii.EMPTY, Insets.EMPTY))
@@ -66,7 +69,11 @@ class PingComponent {
                     val address = InetAddress.getByName(address)
                     val result = address.isReachable(PingController.PING_TIMEOUT)
                     Platform.runLater { componentPane.background = if (result) PING_SUCCESS_COLOR else PING_FAIL_COLOR }
-                } catch (_: Exception) {
+                } catch (_: CancellationException) {
+                    break
+                } catch (_: UnknownHostException) {
+                    Platform.runLater { componentPane.background = PING_FAIL_COLOR }
+                } catch (_: IOException) {
                     Platform.runLater { componentPane.background = PING_FAIL_COLOR }
                 }
                 delay(NEW_ATTEMPT_DELAY)
