@@ -82,7 +82,9 @@ class MainController {
             }
             updateConfigList()
             TCPConfigApp.INSTANCE.showInfoAlert("Succès", "La config \"${config.name}\" a bien été importée")
-        } catch (_: IllegalArgumentException) {}
+        } catch (_: IllegalArgumentException) {
+            TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier mal formatté (${file.name})")
+        }
     }
 
     @FXML

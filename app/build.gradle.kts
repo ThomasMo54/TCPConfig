@@ -15,6 +15,8 @@ repositories {
 }
 
 dependencies {
+    testImplementation(kotlin("test"))
+
     implementation("org.yaml:snakeyaml:2.2")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
@@ -37,6 +39,13 @@ tasks {
 
 kotlin {
     jvmToolchain(17)
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 javafx {

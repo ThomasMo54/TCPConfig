@@ -64,7 +64,6 @@ class ConfigManager {
         if (configFile.extension == LEGACY_CONFIG_FILE_EXTENSION) {
             val lines = configFile.readLines()
             if (lines.size < 4) {
-                TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier mal formatté (${configFile.name})")
                 throw IllegalArgumentException()
             }
             val config = createConfigFromDataList(lines)
@@ -81,7 +80,6 @@ class ConfigManager {
         if (configFile.extension == LEGACY_SAVE_FILE_EXTENSION) {
             val lines = configFile.readLines()
             if (lines.size < MAX_CONFIG_DATA_NUMBER) {
-                TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier mal formatté (${configFile.name})")
                 throw IllegalArgumentException()
             }
             var configLineNumber = 0
@@ -105,7 +103,6 @@ class ConfigManager {
             return firstConfig!!
         }
         if (configFile.extension != CONFIG_FILE_EXTENSION) {
-            TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Fichier non reconnu (${configFile.name})")
             throw IllegalArgumentException()
         }
         val inputStream = FileInputStream(configFile)
