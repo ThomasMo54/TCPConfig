@@ -5,9 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.NetworkInformation;
 using System.Management;
+using Microsoft.Win32;
 
 namespace NetInterfaceManager {
     class Program {
+
+        private static RegistryKey registryKey = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", true);
+
         static void Main(string[] args) {
             if (args.Length == 0) return;
             switch (args[0]) {
@@ -21,6 +25,14 @@ namespace NetInterfaceManager {
                 }
                 case "resetconfig": {
                     resetConfig();
+                    break;
+                }
+                case "isproxyenabled": {
+                    isProxyEnabled();
+                    break;
+                }
+                case "setproxystate": {
+                    setProxyState(args);
                     break;
                 }
             }
@@ -115,6 +127,14 @@ namespace NetInterfaceManager {
             }
 
             Console.WriteLine("success");
+        }
+
+        static void isProxyEnabled() {
+            Console.WriteLine((int)registryKey.GetValue("ProxyEnable"));
+        }
+
+        static void setProxyState(string[] args) {
+            registryKey.SetValue("ProxyEnable", Int32.Parse(args[1]));
         }
     }
 }
