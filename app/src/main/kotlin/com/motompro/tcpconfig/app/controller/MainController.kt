@@ -5,17 +5,15 @@ import com.motompro.tcpconfig.app.component.ConfigComponent
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
 import com.motompro.tcpconfig.app.exception.ResetConfigException
-import com.motompro.tcpconfig.app.util.IPRange
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
-import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.geometry.Insets
-import javafx.scene.Node
 import javafx.scene.control.Button
+import javafx.scene.control.CheckBox
 import javafx.scene.control.SplitPane
 import javafx.scene.control.TextField
 import javafx.scene.effect.ColorAdjust
@@ -48,6 +46,8 @@ class MainController {
     private lateinit var configsList: VBox
     @FXML
     private lateinit var splitPane: SplitPane
+    @FXML
+    private lateinit var proxyCheckBox: CheckBox
 
     @FXML
     private fun initialize() {
@@ -56,6 +56,7 @@ class MainController {
             currentSearch = newValue
             updateConfigList()
         }
+        proxyCheckBox.isSelected = TCPConfigApp.INSTANCE.netInterfaceManager.isProxyActivated
     }
 
     @FXML
@@ -89,17 +90,24 @@ class MainController {
 
     @FXML
     private fun onResetButtonClick() {
+        val app = TCPConfigApp.INSTANCE
         try {
-            TCPConfigApp.INSTANCE.netInterfaceManager.resetConfig()
-            TCPConfigApp.INSTANCE.showInfoAlert("Succès", "Votre configuration TCP a bien été réinitialisée")
+            app.netInterfaceManager.resetConfig()
+            app.activeConfig = null
+            app.showInfoAlert("Succès", "Votre configuration TCP a bien été réinitialisée")
         } catch (ex: ResetConfigException) {
-            TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Impossible de réinitialiser la configuration TCP")
+            app.showErrorAlert("Erreur", "Impossible de réinitialiser la configuration TCP")
         }
     }
 
     @FXML
     private fun onPingButtonClick() {
         TCPConfigApp.INSTANCE.swapScene("create-ping-view.fxml")
+    }
+
+    @FXML
+    private fun onProxyCheckBoxClicked() {
+        TCPConfigApp.INSTANCE.netInterfaceManager.isProxyActivated = proxyCheckBox.isSelected
     }
 
     @FXML

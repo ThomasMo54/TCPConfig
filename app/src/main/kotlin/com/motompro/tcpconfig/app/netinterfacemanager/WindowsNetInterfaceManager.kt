@@ -14,6 +14,12 @@ class WindowsNetInterfaceManager : NetInterfaceManager {
 
     private val appPath = File(TCPConfigApp::class.java.protectionDomain.codeSource.location.path.replace("%20", " ")).parentFile.absolutePath
 
+    override var isProxyActivated: Boolean
+        get() = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "isproxyenabled")).readLine() != "0"
+        set(value) {
+            startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "setproxystate", if (value) "1" else "0"))
+        }
+
     override val netInterfaces: List<String>
         get() {
             val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "getinterfaces"))

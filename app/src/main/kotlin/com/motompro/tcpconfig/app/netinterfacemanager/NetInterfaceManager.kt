@@ -5,6 +5,11 @@ import com.motompro.tcpconfig.app.config.Config
 interface NetInterfaceManager {
 
     /**
+     * *true* if the computer is connected to a proxy server, *false* otherwise
+     */
+    var isProxyActivated: Boolean
+
+    /**
      * Get the connected network interfaces names
      */
     val netInterfaces: List<String>
