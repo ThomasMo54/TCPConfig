@@ -2,6 +2,7 @@ package com.motompro.tcpconfig.app
 
 import com.google.gson.JsonParser
 import com.motompro.tcpconfig.app.component.progressdialog.ProgressDialog
+import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
 import com.motompro.tcpconfig.app.netinterfacemanager.NetInterfaceManager
 import com.motompro.tcpconfig.app.netinterfacemanager.WindowsNetInterfaceManager
@@ -43,6 +44,7 @@ private const val FILE_DOWNLOAD_BUFFER_SIZE = 1024
 class TCPConfigApp : Application() {
 
     private val version = readVersion()
+    private val defaultTitle = "$WINDOW_TITLE $version"
     private val resources = mutableMapOf<String, URL>()
 
     val configManager = ConfigManager()
@@ -50,6 +52,16 @@ class TCPConfigApp : Application() {
 
     lateinit var stage: Stage
         private set
+
+    var activeConfig: Config? = null
+        set(value) {
+            field = value
+            if (value == null) {
+                stage.title = defaultTitle
+            } else {
+                stage.title = "$defaultTitle - ${value.name}"
+            }
+        }
 
     override fun start(stage: Stage) {
         INSTANCE = this
@@ -61,7 +73,7 @@ class TCPConfigApp : Application() {
         if (resource != null) resources["main-view.fxml"] = resource
         val fxmlLoader = FXMLLoader(resource)
         val scene = Scene(fxmlLoader.load(), DEFAULT_WIDTH, DEFAULT_HEIGHT)
-        stage.title = "$WINDOW_TITLE $version"
+        stage.title = defaultTitle
         stage.icons.add(Image(TCPConfigApp::class.java.getResourceAsStream("image/app-icon.png")))
         stage.scene = scene
         stage.show()

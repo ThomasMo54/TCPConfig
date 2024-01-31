@@ -64,18 +64,20 @@ class ConfigComponent {
 
     @FXML
     private fun onUseButtonClick(event: ActionEvent) {
+        val app = TCPConfigApp.INSTANCE
         if (config == null) {
-            TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "Une erreur est survenue")
+            app.showErrorAlert("Erreur", "Une erreur est survenue")
             return
         }
         try {
-            TCPConfigApp.INSTANCE.netInterfaceManager.applyConfig(config!!)
-            TCPConfigApp.INSTANCE.showInfoAlert("Succès", "La config a bien été appliquée")
+            app.netInterfaceManager.applyConfig(config!!)
+            app.activeConfig = config
+            app.showInfoAlert("Succès", "La config a bien été appliquée")
         } catch (ex: ApplyConfigException) {
             when (ex.type) {
-                ApplyConfigException.Type.NOT_ENOUGH_ARGS -> TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "La config est corrompue")
-                ApplyConfigException.Type.INTERFACE_NOT_CONNECTED -> TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'est pas connectée à un réseau")
-                ApplyConfigException.Type.INTERFACE_NOT_FOUND -> TCPConfigApp.INSTANCE.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'a pas été trouvée sur cet ordinateur")
+                ApplyConfigException.Type.NOT_ENOUGH_ARGS -> app.showErrorAlert("Erreur", "La config est corrompue")
+                ApplyConfigException.Type.INTERFACE_NOT_CONNECTED -> app.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'est pas connectée à un réseau")
+                ApplyConfigException.Type.INTERFACE_NOT_FOUND -> app.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'a pas été trouvée sur cet ordinateur")
             }
         }
     }
