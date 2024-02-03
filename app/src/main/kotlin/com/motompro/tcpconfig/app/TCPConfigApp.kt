@@ -4,6 +4,7 @@ import com.google.gson.JsonParser
 import com.motompro.tcpconfig.app.component.progressdialog.ProgressDialog
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
+import com.motompro.tcpconfig.app.dhcp.DHCPServer
 import com.motompro.tcpconfig.app.netinterfacemanager.NetInterfaceManager
 import com.motompro.tcpconfig.app.netinterfacemanager.WindowsNetInterfaceManager
 import javafx.application.Application
@@ -49,6 +50,7 @@ class TCPConfigApp : Application() {
 
     val configManager = ConfigManager()
     val netInterfaceManager: NetInterfaceManager = WindowsNetInterfaceManager()
+    val dhcpServer = DHCPServer()
 
     lateinit var stage: Stage
         private set
@@ -79,6 +81,11 @@ class TCPConfigApp : Application() {
         stage.show()
 
         checkForNewerVersion()
+    }
+
+    override fun stop() {
+        dhcpServer.stop()
+        super.stop()
     }
 
     private fun readVersion(): String {

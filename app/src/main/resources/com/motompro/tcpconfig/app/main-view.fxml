@@ -53,6 +53,15 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="250.0" mnemonicParsing="false" onAction="#onDhcpButtonClick" prefHeight="80.0" prefWidth="120.0" text="DHCP">
+                     <graphic>
+                        <ImageView fx:id="dhcpButtonImage" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@image/dhcp-icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
             </VBox>
          </center>

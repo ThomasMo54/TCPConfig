@@ -1,5 +1,5 @@
 group = "com.motompro.tcpconfig"
-version = "2.1.6"
+version = "2.2.0"
 
 tasks.register<Copy>("addExecutablesToDistribution") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

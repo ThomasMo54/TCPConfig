@@ -7,9 +7,9 @@ import javafx.scene.control.TextField
 class RangeComponent {
 
     @FXML
-    private lateinit var rangeStartTextField: TextField
+    lateinit var rangeStartTextField: TextField
     @FXML
-    private lateinit var rangeEndTextField: TextField
+    lateinit var rangeEndTextField: TextField
 
     val range: IPRange
         get() = IPRange(rangeStartTextField.text, rangeEndTextField.text)

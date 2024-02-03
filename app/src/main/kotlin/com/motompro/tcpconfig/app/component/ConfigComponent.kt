@@ -5,7 +5,7 @@ import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
 import com.motompro.tcpconfig.app.controller.AddEditConfigController
 import com.motompro.tcpconfig.app.controller.MainController
-import com.motompro.tcpconfig.app.exception.ApplyConfigException
+import com.motompro.tcpconfig.app.exception.ConfigException
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -73,11 +73,12 @@ class ConfigComponent {
             app.netInterfaceManager.applyConfig(config!!)
             app.activeConfig = config
             app.showInfoAlert("Succès", "La config a bien été appliquée")
-        } catch (ex: ApplyConfigException) {
+        } catch (ex: ConfigException) {
             when (ex.type) {
-                ApplyConfigException.Type.NOT_ENOUGH_ARGS -> app.showErrorAlert("Erreur", "La config est corrompue")
-                ApplyConfigException.Type.INTERFACE_NOT_CONNECTED -> app.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'est pas connectée à un réseau")
-                ApplyConfigException.Type.INTERFACE_NOT_FOUND -> app.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'a pas été trouvée sur cet ordinateur")
+                ConfigException.Type.NOT_ENOUGH_ARGS -> app.showErrorAlert("Erreur", "La config est corrompue")
+                ConfigException.Type.INTERFACE_NOT_CONNECTED -> app.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'est pas connectée à un réseau")
+                ConfigException.Type.INTERFACE_NOT_FOUND -> app.showErrorAlert("Erreur", "L'interface ${config!!.networkAdapter} n'a pas été trouvée sur cet ordinateur")
+                else -> app.showErrorAlert("Erreur", "Une erreur est survenue (${ex.type})")
             }
         }
     }

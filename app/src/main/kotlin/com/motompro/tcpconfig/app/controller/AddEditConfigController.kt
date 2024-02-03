@@ -20,14 +20,22 @@ class AddEditConfigController {
             setExistingFields()
         }
 
-    lateinit var backButton: Button
-    lateinit var nameTextField: TextField
-    lateinit var netInterfaceComboBox: ComboBox<String>
-    lateinit var ipTextField: TextField
-    lateinit var maskTextField: TextField
-    lateinit var gatewayTextField: TextField
-    lateinit var favDNSTextField: TextField
-    lateinit var auxDNSTextField: TextField
+    @FXML
+    private lateinit var backButton: Button
+    @FXML
+    private lateinit var nameTextField: TextField
+    @FXML
+    private lateinit var netInterfaceComboBox: ComboBox<String>
+    @FXML
+    private lateinit var ipTextField: TextField
+    @FXML
+    private lateinit var maskTextField: TextField
+    @FXML
+    private lateinit var gatewayTextField: TextField
+    @FXML
+    private lateinit var favDNSTextField: TextField
+    @FXML
+    private lateinit var auxDNSTextField: TextField
 
     @FXML
     private fun initialize() {

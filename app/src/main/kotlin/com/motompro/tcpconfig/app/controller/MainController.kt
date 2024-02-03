@@ -17,6 +17,8 @@ import javafx.scene.control.CheckBox
 import javafx.scene.control.SplitPane
 import javafx.scene.control.TextField
 import javafx.scene.effect.ColorAdjust
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.BorderPane
@@ -37,6 +39,8 @@ private const val PING_TAB_SIZE_RATIO = 0.25
 
 class MainController {
 
+    private val dhcpServerEnabledIcon = Image(TCPConfigApp::class.java.getResourceAsStream("image/dhcp-enabled-icon.png"))
+
     private var currentSearch = ""
     private var pingController: PingController? = null
 
@@ -46,6 +50,8 @@ class MainController {
     private lateinit var configsList: VBox
     @FXML
     private lateinit var splitPane: SplitPane
+    @FXML
+    private lateinit var dhcpButtonImage: ImageView
     @FXML
     private lateinit var proxyCheckBox: CheckBox
 
@@ -57,6 +63,10 @@ class MainController {
             updateConfigList()
         }
         proxyCheckBox.isSelected = TCPConfigApp.INSTANCE.netInterfaceManager.isProxyActivated
+
+        if (TCPConfigApp.INSTANCE.dhcpServer.isStarted) {
+            dhcpButtonImage.image = dhcpServerEnabledIcon
+        }
     }
 
     @FXML
@@ -103,6 +113,11 @@ class MainController {
     @FXML
     private fun onPingButtonClick() {
         TCPConfigApp.INSTANCE.swapScene("create-ping-view.fxml")
+    }
+
+    @FXML
+    private fun onDhcpButtonClick() {
+        TCPConfigApp.INSTANCE.swapScene("dhcp-view.fxml")
     }
 
     @FXML

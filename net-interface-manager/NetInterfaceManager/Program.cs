@@ -19,6 +19,14 @@ namespace NetInterfaceManager {
                     writeInterfaces();
                     break;
                 }
+                case "getinterfaceconfig": {
+                    getInterfaceConfig(args);
+                    break;
+                }
+                case "hasStaticIP": {
+                    hasStaticIP(args);
+                    break;
+                }
                 case "applyconfig": {
                     applyConfig(args);
                     break;
@@ -44,6 +52,89 @@ namespace NetInterfaceManager {
             foreach (NetworkInterface inter in interfaces) {
                 Console.WriteLine(inter.Description);
             }
+        }
+
+        static void getInterfaceConfig(string[] args) {
+            string netInterface = args[1];
+
+            ManagementClass objMC = new ManagementClass("Win32_NetworkAdapterConfiguration");
+            ManagementObjectCollection objMOC = objMC.GetInstances();
+
+            bool found = false;
+            string ipAddress = null;
+            string subnetMask = null;
+            string gateway = null;
+            string favDNS = null;
+            string auxDNS = null;
+
+            foreach (ManagementObject objMO in objMOC) {
+                if (!((string)objMO["Description"]).Equals(netInterface)) continue;
+                if (!((bool)objMO["IPEnabled"])) {
+                    Console.WriteLine("error notconnected");
+                    return;
+                }
+                found = true;
+
+                // Check if the interface is connected to a network
+                NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface inter in networkInterfaces) {
+                    if (!inter.Description.Equals(netInterface)) continue;
+                    if (!inter.OperationalStatus.ToString().Equals("Up")) {
+                        Console.WriteLine("error notconnected");
+                        return;
+                    }
+                }
+
+                ipAddress = ((string[])objMO["IPAddress"])[0];
+                subnetMask = ((string[])objMO["IPSubnet"])[0];
+                try {
+                    gateway = ((string[])objMO["DefaultIPGateway"])[0];
+                } catch (NullReferenceException e) {}
+                try {
+                    string[] dnsSearchOrder = (string[])objMO["DNSServerSearchOrder"];
+                    if (dnsSearchOrder.Length > 0) {
+                        favDNS = dnsSearchOrder[0];
+                    }
+                    if (dnsSearchOrder.Length > 1) {
+                        auxDNS = dnsSearchOrder[1];
+                    }
+                } catch (NullReferenceException e) {}
+                break;
+            }
+
+            if (!found) {
+                Console.WriteLine("error notconnected");
+                return;
+            }
+
+            Console.WriteLine("success");
+            Console.WriteLine(ipAddress);
+            Console.WriteLine(subnetMask);
+            Console.WriteLine(gateway);
+            Console.WriteLine(favDNS);
+            Console.WriteLine(auxDNS);
+        }
+
+        static void hasStaticIP(string[] args) {
+            string netInterface = args[1];
+
+            ManagementClass objMC = new ManagementClass("Win32_NetworkAdapterConfiguration");
+            ManagementObjectCollection objMOC = objMC.GetInstances();
+
+            foreach (ManagementObject objMO in objMOC) {
+                if (!((string)objMO["Description"]).Equals(netInterface)) continue;
+                if (!((bool)objMO["IPEnabled"])) {
+                    Console.WriteLine("error notconnected");
+                    return;
+                }
+
+                bool hasStaticIP = !((bool)objMO["DHCPEnabled"]);
+                Console.WriteLine("success");
+                Console.WriteLine(hasStaticIP);
+                return;
+            }
+
+            Console.WriteLine("error notconnected");
         }
 
         static void applyConfig(string[] args) {

@@ -2,7 +2,7 @@ package com.motompro.tcpconfig.app.netinterfacemanager
 
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.config.Config
-import com.motompro.tcpconfig.app.exception.ApplyConfigException
+import com.motompro.tcpconfig.app.exception.ConfigException
 import com.motompro.tcpconfig.app.exception.ResetConfigException
 import java.io.BufferedReader
 import java.io.File
@@ -31,6 +31,35 @@ class WindowsNetInterfaceManager : NetInterfaceManager {
             return interfaces
         }
 
+    override fun getConfig(netInterface: String): Config {
+        val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "getinterfaceconfig", "\"${netInterface}\""))
+        val result = reader.readLine() ?: throw ConfigException(ConfigException.Type.INTERFACE_NOT_VALID)
+        if (result.startsWith("error")) throw ConfigException(ConfigException.Type.INTERFACE_NOT_CONNECTED)
+        val ipAddress = reader.readLine()
+        val subnetMask = reader.readLine()
+        val gateway = reader.readLine()
+        val favDNS = reader.readLine()
+        val auxDNS = reader.readLine()
+        return Config(
+            "",
+            netInterface,
+            ipAddress,
+            subnetMask,
+            if (gateway != "null" && gateway.isNotBlank()) gateway else null,
+            if (favDNS != "null" && favDNS.isNotBlank()) favDNS else null,
+            if (auxDNS != "null" && auxDNS.isNotBlank()) auxDNS else null,
+        )
+    }
+
+    override fun interfaceHasStaticIP(netInterface: String): Boolean {
+        val reader = startManagerProcess(listOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "hasStaticIP", "\"${netInterface}\""))
+        val result = reader.readLine() ?: throw ConfigException(ConfigException.Type.INTERFACE_NOT_VALID)
+        if (result.startsWith("error")) throw ConfigException(ConfigException.Type.INTERFACE_NOT_CONNECTED)
+        val isStatic = reader.readLine()
+        println(isStatic)
+        return isStatic.toBoolean()
+    }
+
     override fun applyConfig(config: Config) {
         val commandParams = mutableListOf("$appPath\\$NET_INTERFACE_MANAGER_SCRIPT", "applyconfig", "\"${config.networkAdapter}\"", config.ip, config.subnetMask)
         config.defaultGateway?.let { commandParams.add(it) }
@@ -42,9 +71,9 @@ class WindowsNetInterfaceManager : NetInterfaceManager {
         if (result.startsWith("error")) {
             val errorType = result.split(" ")[1]
             when (errorType) {
-                "notconnected" -> throw ApplyConfigException(ApplyConfigException.Type.INTERFACE_NOT_CONNECTED)
-                "notfound" -> throw ApplyConfigException(ApplyConfigException.Type.INTERFACE_NOT_FOUND)
-                else -> throw ApplyConfigException(ApplyConfigException.Type.NOT_ENOUGH_ARGS)
+                "notconnected" -> throw ConfigException(ConfigException.Type.INTERFACE_NOT_CONNECTED)
+                "notfound" -> throw ConfigException(ConfigException.Type.INTERFACE_NOT_FOUND)
+                else -> throw ConfigException(ConfigException.Type.NOT_ENOUGH_ARGS)
             }
         }
     }
