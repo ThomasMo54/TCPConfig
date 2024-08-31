@@ -22,7 +22,7 @@ private const val THREAD_POOL_SIZE = 16
 
 class PingController {
 
-    lateinit var mainController: MainController
+    lateinit var mainController: TCPController
     lateinit var pingAddresses: List<String>
 
     private val pingJobs = mutableSetOf<Job>()
@@ -32,8 +32,6 @@ class PingController {
 
     @FXML
     private lateinit var scrollPane: ScrollPane
-    @FXML
-    private lateinit var closeButton: Button
     @FXML
     private lateinit var restartButton: Button
     @FXML
@@ -45,8 +43,7 @@ class PingController {
 
     @FXML
     private fun initialize() {
-        MainController.addDarkenEffect(closeButton)
-        MainController.addDarkenEffect(restartButton)
+        MainController.setButtonHoverEffect(restartButton)
     }
 
     @FXML
@@ -54,7 +51,6 @@ class PingController {
         isClosed = true
         pingJobs.forEach { it.cancel() }
         pingComponents.forEach { it.stopLive() }
-        mainController.closePingTab()
     }
 
     @FXML

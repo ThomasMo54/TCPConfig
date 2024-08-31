@@ -1,9 +1,9 @@
 package com.motompro.tcpconfig.app.controller
 
 import com.motompro.tcpconfig.app.TCPConfigApp
+import com.motompro.tcpconfig.app.component.draggabletab.DraggableTab
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.exception.InvalidConfigFieldException
-import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
@@ -19,6 +19,7 @@ class AddEditConfigController {
             field = value
             setExistingFields()
         }
+    lateinit var tab: DraggableTab
 
     @FXML
     private lateinit var backButton: Button
@@ -39,7 +40,6 @@ class AddEditConfigController {
 
     @FXML
     private fun initialize() {
-        MainController.addDarkenEffect(backButton)
         try {
             val netInterfaces = TCPConfigApp.INSTANCE.netInterfaceManager.netInterfaces.sorted()
             netInterfaceComboBox.items.addAll(netInterfaces)
@@ -51,7 +51,7 @@ class AddEditConfigController {
 
     @FXML
     private fun onBackButtonClick() {
-        TCPConfigApp.INSTANCE.swapScene("main-view.fxml")
+        TCPConfigApp.INSTANCE.swapScene("tcp-view.fxml")
     }
 
     @FXML
@@ -80,8 +80,10 @@ class AddEditConfigController {
                 )
                 TCPConfigApp.INSTANCE.configManager.addConfig(config)
             }
-            val controller = TCPConfigApp.INSTANCE.swapScene<MainController>("main-view.fxml")
-            controller.updateConfigList()
+            val mainController = TCPConfigApp.INSTANCE.mainController
+            mainController.tcpController?.updateConfigList()
+            mainController.closeTab(tab)
+            mainController.focusTCPTab()
         } catch (ex: InvalidConfigFieldException) {
             when (ex.type) {
                 InvalidConfigFieldException.Type.NAME_TOO_LONG -> {

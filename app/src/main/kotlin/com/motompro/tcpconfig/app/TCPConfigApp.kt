@@ -4,6 +4,7 @@ import com.google.gson.JsonParser
 import com.motompro.tcpconfig.app.component.progressdialog.ProgressDialog
 import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
+import com.motompro.tcpconfig.app.controller.MainController
 import com.motompro.tcpconfig.app.dhcp.DHCPServer
 import com.motompro.tcpconfig.app.netinterfacemanager.NetInterfaceManager
 import com.motompro.tcpconfig.app.netinterfacemanager.WindowsNetInterfaceManager
@@ -16,6 +17,7 @@ import javafx.scene.control.Alert
 import javafx.scene.control.ButtonBar
 import javafx.scene.control.ButtonType
 import javafx.scene.image.Image
+import javafx.scene.layout.Pane
 import javafx.stage.Stage
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
@@ -54,6 +56,8 @@ class TCPConfigApp : Application() {
 
     lateinit var stage: Stage
         private set
+    lateinit var mainController: MainController
+        private set
 
     var activeConfig: Config? = null
         set(value) {
@@ -75,9 +79,11 @@ class TCPConfigApp : Application() {
         if (resource != null) resources["main-view.fxml"] = resource
         val fxmlLoader = FXMLLoader(resource)
         val scene = Scene(fxmlLoader.load(), DEFAULT_WIDTH, DEFAULT_HEIGHT)
+        mainController = fxmlLoader.getController()
         stage.title = defaultTitle
         stage.icons.add(Image(TCPConfigApp::class.java.getResourceAsStream("image/app-icon.png")))
         stage.scene = scene
+        stage.isMaximized = true
         stage.show()
 
         checkForNewerVersion()

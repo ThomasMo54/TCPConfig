@@ -2,6 +2,7 @@ package com.motompro.tcpconfig.app.controller
 
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.component.RangeComponent
+import com.motompro.tcpconfig.app.component.draggabletab.DraggableTab
 import com.motompro.tcpconfig.app.util.IPRange
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -13,6 +14,7 @@ import javafx.scene.layout.VBox
 class CreatePingController {
 
     private val ranges = mutableListOf<RangeComponent>()
+    lateinit var tab: DraggableTab
 
     @FXML
     private lateinit var backButton: Button
@@ -21,13 +23,12 @@ class CreatePingController {
 
     @FXML
     private fun initialize() {
-        MainController.addDarkenEffect(backButton)
         addNewRange()
     }
 
     @FXML
     private fun onBackButtonClick(event: ActionEvent) {
-        TCPConfigApp.INSTANCE.swapScene("main-view.fxml")
+        TCPConfigApp.INSTANCE.swapScene("tcp-view.fxml")
     }
 
     @FXML
@@ -62,8 +63,9 @@ class CreatePingController {
             .map { it.range }
             .flatMap { it.ipList }
             .sortedWith { ip1, ip2 -> if (IPRange.isIPSmallerThanOther(ip1, ip2)) -1 else 1 }
-        val mainController = TCPConfigApp.INSTANCE.swapScene<MainController>("main-view.fxml")
-        mainController.openPingTab(ipList)
+        val mainController = TCPConfigApp.INSTANCE.mainController
+        mainController.createPingResultTab(true, ipList)
+        mainController.closeTab(tab)
     }
 
     private fun addNewRange() {

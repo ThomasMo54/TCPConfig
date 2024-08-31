@@ -7,30 +7,19 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="480.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.motompro.tcpconfig.app.controller.DHCPController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="20.0" minWidth="20.0" prefHeight="480.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.motompro.tcpconfig.app.controller.DHCPController">
     <padding>
       <Insets bottom="15.0" left="10.0" right="10.0" top="10.0" />
     </padding>
    <center>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <center>
-            <VBox prefHeight="200.0" prefWidth="300.0" spacing="10.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="300.0" spacing="10.0">
                <children>
-                    <Button fx:id="backButton" mnemonicParsing="false" onAction="#onBackButtonClick" prefHeight="24.0" prefWidth="24.0" style="-fx-background-color: transparent; -fx-text-fill: transparent; -fx-cursor: hand;">
-                     <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@image/back-icon.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <VBox.margin>
-                        <Insets left="-6.0" />
-                     </VBox.margin>
-                    </Button>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Interface réseau" />
                   <ComboBox fx:id="netInterfaceComboBox" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Plage" />
@@ -47,22 +36,14 @@
                      </VBox.margin>
                   </Button>
                </children>
-               <BorderPane.margin>
-                  <Insets left="5.0" />
-               </BorderPane.margin>
             </VBox>
-         </center>
-         <right>
-            <VBox fx:id="historyVBox" minHeight="20.0" prefWidth="350.0" spacing="5.0" BorderPane.alignment="CENTER">
+            <VBox fx:id="historyVBox" minHeight="20.0" prefWidth="350.0" spacing="5.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Historique" />
-                  <ListView fx:id="historyListView" minHeight="20.0" prefWidth="300.0" />
+                  <ListView fx:id="historyListView" minHeight="20.0" />
                </children>
-               <BorderPane.margin>
-                  <Insets right="5.0" />
-               </BorderPane.margin>
             </VBox>
-         </right>
-      </BorderPane>
+         </children>
+      </HBox>
    </center>
 </BorderPane>

@@ -5,6 +5,7 @@ import com.motompro.tcpconfig.app.config.Config
 import com.motompro.tcpconfig.app.config.ConfigManager
 import com.motompro.tcpconfig.app.controller.AddEditConfigController
 import com.motompro.tcpconfig.app.controller.MainController
+import com.motompro.tcpconfig.app.controller.TCPController
 import com.motompro.tcpconfig.app.exception.ConfigException
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -29,7 +30,7 @@ class ConfigComponent {
             if (value.defaultGateway != null) properties.add(value.defaultGateway!!)
             configPropertiesText.text = properties.joinToString("  |  ")
         }
-    lateinit var mainController: MainController
+    lateinit var mainController: TCPController
     private lateinit var buttons: Set<Button>
 
     @FXML
@@ -48,8 +49,7 @@ class ConfigComponent {
     @FXML
     private fun initialize() {
         buttons = setOf(useButton, editButton, exportButton, removeButton)
-        // Set buttons hover animation
-        buttons.forEach { button -> MainController.addDarkenEffect(button) }
+        buttons.forEach { MainController.setButtonHoverEffect(it) }
     }
 
     @FXML
@@ -85,13 +85,7 @@ class ConfigComponent {
 
     @FXML
     private fun onEditButtonClick(event: ActionEvent) {
-        val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("add-edit-config-view.fxml"))
-        val node = fxmlLoader.load<BorderPane>()
-        val controller = fxmlLoader.getController<AddEditConfigController>()
-        controller.configInEdition = config
-        val stage = TCPConfigApp.INSTANCE.stage
-        val scene = Scene(node, stage.scene.width, stage.scene.height)
-        stage.scene = scene
+        TCPConfigApp.INSTANCE.mainController.createEditConfigTab(config!!)
     }
 
     @FXML

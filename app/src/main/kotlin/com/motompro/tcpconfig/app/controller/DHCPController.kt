@@ -2,10 +2,10 @@ package com.motompro.tcpconfig.app.controller
 
 import com.motompro.tcpconfig.app.TCPConfigApp
 import com.motompro.tcpconfig.app.component.RangeComponent
+import com.motompro.tcpconfig.app.component.draggabletab.DraggableTab
 import com.motompro.tcpconfig.app.dhcp.DHCPServerListener
 import com.motompro.tcpconfig.app.dhcp.history.AddressAssignHistory
 import com.motompro.tcpconfig.app.dhcp.history.ServerStartHistory
-import com.motompro.tcpconfig.app.exception.ConfigException
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -18,7 +18,6 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import java.io.IOException
-import java.net.SocketException
 
 class DHCPController : DHCPServerListener {
 
@@ -39,18 +38,18 @@ class DHCPController : DHCPServerListener {
     private lateinit var historyListView: ListView<String>
 
     private lateinit var ipRangeComponent: RangeComponent
+    lateinit var tab: DraggableTab
 
     @FXML
     private fun initialize() {
-        MainController.addDarkenEffect(backButton)
-        historyListView.prefHeightProperty().bind((historyVBox.parent as BorderPane).heightProperty())
-        historyVBox.prefHeightProperty().bind((historyVBox.parent as BorderPane).heightProperty())
+        historyListView.prefHeightProperty().bind((historyVBox.parent as HBox).heightProperty())
+        historyVBox.prefHeightProperty().bind((historyVBox.parent as HBox).heightProperty())
 
         // Add range component
         val fxmlLoader = FXMLLoader(TCPConfigApp::class.java.getResource("range-component.fxml"))
         val node = fxmlLoader.load<HBox>()
         ipRangeComponent = fxmlLoader.getController()
-        (netInterfaceComboBox.parent as VBox).children.add(4, node)
+        (netInterfaceComboBox.parent as VBox).children.add(3, node)
 
         // Add network interfaces
         try {
@@ -82,7 +81,7 @@ class DHCPController : DHCPServerListener {
 
     @FXML
     private fun onBackButtonClick() {
-        TCPConfigApp.INSTANCE.swapScene("main-view.fxml")
+        TCPConfigApp.INSTANCE.swapScene("tcp-view.fxml")
     }
 
     @FXML
